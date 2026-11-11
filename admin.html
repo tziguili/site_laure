@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Espace Laure — Laure Yoga Club</title>
+  <link rel="icon" href="assets/img/lune.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="admin">
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="index.html"><img src="assets/img/lune.svg" alt="">Laure <span>Yoga Club</span></a>
+    <nav class="admin-nav">
+      <a href="#planning">Planning</a>
+      <a href="#creer">Créer des cours</a>
+      <a href="#cartes">Cartes</a>
+      <button class="link-btn" id="logout" type="button">Déconnexion</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="login" class="admin-login">
+    <h1>Espace <em>Laure</em></h1>
+    <form id="login-form" class="form card">
+      <label>Mot de passe<input name="password" type="password" required autocomplete="current-password"></label>
+      <button class="btn" type="submit">Se connecter</button>
+      <p class="form-msg form-msg--error" id="login-error" hidden></p>
+    </form>
+  </section>
+
+  <div id="app" hidden>
+    <section id="planning" class="admin-section">
+      <h2>Planning</h2>
+      <div id="classes"><p class="muted">Chargement…</p></div>
+    </section>
+
+    <section id="creer" class="admin-section">
+      <h2>Créer des cours</h2>
+      <form id="new-class" class="form card form-grid">
+        <label>Date<input name="date" type="date" required></label>
+        <label>Heure<input name="time" type="time" value="11:00" required></label>
+        <label>Durée (min)<input name="duration" type="number" min="15" max="300" value="60"></label>
+        <label>Places<input name="capacity" id="new-capacity" type="number" min="1" max="100"></label>
+        <label>Répéter chaque semaine pendant
+          <select name="repeat">
+            <option value="1">— (une seule fois)</option>
+            <option value="4">4 semaines</option>
+            <option value="8">8 semaines</option>
+            <option value="12">12 semaines</option>
+          </select>
+        </label>
+        <label>Titre<input name="title" placeholder="Cours de yoga" maxlength="80"></label>
+        <label class="span-2">Lieu<input name="location" placeholder="Maison Né, 25 rue Beccaria, 75012 Paris" maxlength="160"></label>
+        <button class="btn" type="submit">Créer</button>
+      </form>
+    </section>
+
+    <section id="cartes" class="admin-section">
+      <h2>Cartes actives</h2>
+      <div id="cards"><p class="muted">Chargement…</p></div>
+      <h3>Enregistrer une carte vendue sur place</h3>
+      <form id="new-card" class="form card form-grid">
+        <label>Prénom et nom<input name="name" required></label>
+        <label>Email<input name="email" type="email" required></label>
+        <label><span>Prix payé (€) <small>(vide = prix normal)</small></span><input name="amount" type="number" min="0" step="0.5"></label>
+        <button class="btn" type="submit">Enregistrer</button>
+      </form>
+    </section>
+  </div>
+
+  <div id="toast" class="toast" hidden role="status"></div>
+</main>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>
