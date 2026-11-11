@@ -1,7 +1,7 @@
 /* ============================================================
    Laure Yoga Club — feuille de style
    Identité (option B validée) : logo LAURE / Yoga Club, bleu ardoise des flyers,
-   titres Fraunces doux, texte Lora, manuscrit Homemade Apple, sans doré
+   titres Fraunces doux, accents en Fraunces italique, texte Lora, sans doré
    ============================================================ */
 
 :root {
@@ -19,7 +19,7 @@
   --font-title: "Fraunces", Georgia, "Times New Roman", serif;
   --font-logo-script: "Marcellus", Georgia, serif;
   --font-logo: "Montserrat", "Helvetica Neue", Arial, sans-serif;
-  --font-hand: "Homemade Apple", "Segoe Script", "Bradley Hand", cursive;
+  --font-accent: "Fraunces", Georgia, serif;   /* italique fine, pour les mots en accent */
   --font-text: "Lora", Georgia, "Times New Roman", serif;
 
   --radius: 18px;
@@ -63,22 +63,15 @@ h1, h2, h3 {
 h1 { font-size: clamp(2.4rem, 5.6vw, 4.1rem); }
 h2 { font-size: clamp(1.85rem, 3.8vw, 2.7rem); }
 h3 { font-size: 1.45rem; }
-/* Mots en accent : écriture manuscrite (Homemade Apple), comme les annotations des flyers */
+/* Mots en accent : Fraunces italique fine, bleu adouci, sur la même ligne */
 h1 em, h2 em {
-  display: block;
-  margin-top: 0.55em;
-  font-family: var(--font-hand);
-  font-style: normal;
+  font-family: var(--font-accent);
+  font-style: italic;
   font-weight: 400;
-  font-size: 0.5em;
-  letter-spacing: 0;
-  line-height: 1.5;
+  font-variation-settings: "SOFT" 100, "WONK" 0;
   color: var(--ink-soft);
-  transform: rotate(-2deg);
-  transform-origin: left center;
 }
-.section-head--center h2 em, .page-hero h1 em, .cta h2 em { transform-origin: center; }
-.hand { font-family: var(--font-hand); font-weight: 400; color: var(--ink-soft); font-size: 0.95rem; line-height: 1.6; }
+.hand { font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--ink-soft); font-size: 1.05rem; line-height: 1.5; }
 
 p { margin: 0 0 1.1em; }
 
@@ -329,7 +322,7 @@ p { margin: 0 0 1.1em; }
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
 }
-.trio-item .hand { color: #e4e2f0; margin: 0 0 0.6rem; transform: rotate(-2deg); transform-origin: left; }
+.trio-item .hand { color: #e4e2f0; margin: 0 0 0.5rem; }
 .trio-item h3 { color: var(--white); font-size: 1.9rem; margin-bottom: 0.25em; }
 .trio-item p:last-child { color: #e9e8f2; margin: 0; }
 
@@ -388,7 +381,7 @@ p { margin: 0 0 1.1em; }
   font-size: 1.2rem;
   line-height: 1.55;
 }
-.quote footer { font-family: var(--font-hand); font-size: 0.95rem; color: var(--white); }
+.quote footer { font-family: var(--font-accent); font-style: italic; font-size: 1rem; color: var(--white); }
 
 /* ---------- Planning ---------- */
 .week {
@@ -715,4 +708,12 @@ td .inline-form input[type="number"] { flex: 0 0 4.2rem; }
 
 /* Option B — ajustements */
 .reviews .eyebrow { color: #e4e2f0; }
-h1 em, h2 em { font-size: max(0.5em, 1.05rem); }
+/* Voile clair en haut des bandes photo : le titre reste lisible sur les zones sombres */
+.trio { isolation: isolate; }
+.trio::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(246, 240, 230, 0.82) 0%, rgba(246, 240, 230, 0.55) 32%, rgba(246, 240, 230, 0) 62%);
+}
