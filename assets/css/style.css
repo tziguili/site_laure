@@ -1,7 +1,7 @@
 /* ============================================================
    Laure Yoga Club — feuille de style
-   Identité : logo LAURE / Yoga Club, bleu ardoise des flyers,
-   titres Marcellus, annotations manuscrites (Caveat)
+   Identité (option B validée) : logo LAURE / Yoga Club, bleu ardoise des flyers,
+   titres Fraunces doux, texte Lora, manuscrit Homemade Apple, sans doré
    ============================================================ */
 
 :root {
@@ -11,15 +11,16 @@
   --ink: #484d75;        /* bleu du logo et des flyers */
   --ink-deep: #363a5c;
   --ink-soft: #5d628a;
-  --sun: #c98f45;        /* or chaud */
+  --sun: #6b6f96;        /* accent : bleu adouci (plus de doré) */
   --text: #2b2a35;
   --muted: #6b6878;
   --white: #fffdf9;
 
-  --font-title: "Marcellus", "Times New Roman", Georgia, serif;
+  --font-title: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-logo-script: "Marcellus", Georgia, serif;
   --font-logo: "Montserrat", "Helvetica Neue", Arial, sans-serif;
-  --font-hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
-  --font-text: "Jost", "Helvetica Neue", Arial, sans-serif;
+  --font-hand: "Homemade Apple", "Segoe Script", "Bradley Hand", cursive;
+  --font-text: "Lora", Georgia, "Times New Roman", serif;
 
   --radius: 18px;
   --max: 1160px;
@@ -37,9 +38,9 @@ body {
   background: var(--cream);
   color: var(--text);
   font-family: var(--font-text);
-  font-weight: 300;
-  font-size: 1.0625rem;
-  line-height: 1.7;
+  font-weight: 400;
+  font-size: 1.04rem;
+  line-height: 1.75;
   -webkit-font-smoothing: antialiased;
   font-variant-numeric: lining-nums;
 }
@@ -52,24 +53,32 @@ a:hover { color: var(--sun); }
 
 h1, h2, h3 {
   font-family: var(--font-title);
-  font-weight: 400;
+  font-weight: 650;
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+  letter-spacing: -0.01em;
   color: var(--ink);
   line-height: 1.1;
   margin: 0 0 0.5em;
 }
-h1 { font-size: clamp(2.5rem, 6vw, 4.4rem); }
-h2 { font-size: clamp(1.9rem, 4vw, 2.8rem); }
+h1 { font-size: clamp(2.4rem, 5.6vw, 4.1rem); }
+h2 { font-size: clamp(1.85rem, 3.8vw, 2.7rem); }
 h3 { font-size: 1.45rem; }
-/* Mots en accent : écriture manuscrite, comme les annotations des flyers */
+/* Mots en accent : écriture manuscrite (Homemade Apple), comme les annotations des flyers */
 h1 em, h2 em {
+  display: block;
+  margin-top: 0.55em;
   font-family: var(--font-hand);
   font-style: normal;
-  font-weight: 600;
-  font-size: 1.18em;
-  color: var(--sun);
-  line-height: 0.9;
+  font-weight: 400;
+  font-size: 0.5em;
+  letter-spacing: 0;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  transform: rotate(-2deg);
+  transform-origin: left center;
 }
-.hand { font-family: var(--font-hand); font-weight: 500; color: var(--sun); font-size: 1.5rem; line-height: 1.2; }
+.section-head--center h2 em, .page-hero h1 em, .cta h2 em { transform-origin: center; }
+.hand { font-family: var(--font-hand); font-weight: 400; color: var(--ink-soft); font-size: 0.95rem; line-height: 1.6; }
 
 p { margin: 0 0 1.1em; }
 
@@ -104,11 +113,11 @@ p { margin: 0 0 1.1em; }
   font-family: var(--font-text);
   font-size: 0.95rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   text-decoration: none;
   transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.25s;
 }
-.btn:hover { background: var(--sun); border-color: var(--sun); color: var(--white); transform: translateY(-2px); }
+.btn:hover { background: var(--ink-deep); border-color: var(--ink-deep); color: var(--white); transform: translateY(-2px); }
 .btn--ghost { background: transparent; color: var(--ink); }
 .btn--light { background: var(--cream); border-color: var(--cream); color: var(--ink); }
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 2rem; }
@@ -140,7 +149,7 @@ p { margin: 0 0 1.1em; }
   text-decoration: none;
 }
 .logo b { font-family: var(--font-logo); font-weight: 700; font-size: 1.32rem; letter-spacing: 0.03em; }
-.logo span { font-family: var(--font-title); font-size: 1.22rem; margin-top: 0.08em; }
+.logo span { font-family: var(--font-logo-script); font-size: 1.22rem; margin-top: 0.08em; }
 .logo:hover { color: var(--ink-deep); }
 
 .nav { display: flex; align-items: center; gap: 2rem; }
@@ -220,9 +229,9 @@ p { margin: 0 0 1.1em; }
 }
 .hero-media {
   position: relative;
-  border-radius: 999px 999px var(--radius) var(--radius);
+  border-radius: 26px;
   overflow: hidden;
-  aspect-ratio: 4 / 4.4;
+  aspect-ratio: 4 / 4.2;
   box-shadow: 0 30px 60px -30px rgba(29, 37, 80, 0.45);
 }
 .hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: 62% center; }
@@ -234,11 +243,11 @@ p { margin: 0 0 1.1em; }
   font-size: 0.92rem;
   color: var(--muted);
 }
-.hero-meta span::before { content: "☾ "; color: var(--sun); }
+.hero-meta span::before { content: "✓ "; color: var(--ink); font-weight: 600; }
 
 @media (max-width: 880px) {
   .hero .wrap { grid-template-columns: minmax(0, 1fr); }
-  .hero-media { aspect-ratio: 4 / 3.4; border-radius: 220px 220px var(--radius) var(--radius); order: -1; }
+  .hero-media { aspect-ratio: 4 / 3.2; order: -1; }
 }
 
 /* ---------- En-tête de page intérieure ---------- */
@@ -267,7 +276,7 @@ p { margin: 0 0 1.1em; }
 .card h3 { margin-bottom: 0.3em; }
 
 .arch {
-  border-radius: 999px 999px var(--radius) var(--radius);
+  border-radius: 26px;
   overflow: hidden;
   aspect-ratio: 3 / 4;
 }
@@ -309,10 +318,20 @@ p { margin: 0 0 1.1em; }
 }
 
 /* Trio Énergie / Mobilité / Relaxation */
-.trio-item { text-align: center; padding: 0 1rem; }
-.trio-item .hand { margin-bottom: 0.4rem; transform: rotate(-3deg); }
-.trio-item h3 { font-size: 2rem; margin-bottom: 0.3em; }
-.trio-item p:last-child { color: var(--ink-soft); }
+.trio { position: relative; background: var(--sand) url("../img/flou-posture.webp") center / cover no-repeat; }
+.trio .section-head h2, .trio .section-head .eyebrow { color: var(--ink-deep); }
+.trio .section-head h2 em { color: var(--ink-deep); }
+.trio-item {
+  background: rgba(72, 77, 117, 0.88);
+  color: var(--white);
+  border-radius: var(--radius);
+  padding: 1.8rem 1.8rem 1.6rem;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.trio-item .hand { color: #e4e2f0; margin: 0 0 0.6rem; transform: rotate(-2deg); transform-origin: left; }
+.trio-item h3 { color: var(--white); font-size: 1.9rem; margin-bottom: 0.25em; }
+.trio-item p:last-child { color: #e9e8f2; margin: 0; }
 
 /* Autres formules (entreprises, particuliers) */
 .offers { align-items: stretch; }
@@ -332,8 +351,8 @@ p { margin: 0 0 1.1em; }
 
 /* Liste à puces lune */
 .list-moon { list-style: none; padding: 0; margin: 0 0 1.5rem; }
-.list-moon li { padding-left: 1.8rem; position: relative; margin-bottom: 0.6rem; }
-.list-moon li::before { content: "☾"; position: absolute; left: 0; color: var(--sun); }
+.list-moon li { padding-left: 2.2rem; position: relative; margin-bottom: 0.7rem; }
+.list-moon li::before { content: ""; position: absolute; left: 0; top: 0.2em; width: 1.35rem; height: 1.35rem; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Ccircle cx='13' cy='13' r='13' fill='%23484d75'/%3E%3Cpath d='M7.5 13.5l3.6 3.6 7.4-7.6' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; }
 
 /* ---------- Avis ---------- */
 .reviews {
@@ -351,7 +370,7 @@ p { margin: 0 0 1.1em; }
 }
 .reviews h2 { color: var(--white); }
 .rating { font-size: 1rem; letter-spacing: 0.05em; color: var(--sand); }
-.rating b { color: #f2c98a; letter-spacing: 0.15em; font-weight: 400; }
+.rating b { color: var(--white); letter-spacing: 0.15em; font-weight: 400; }
 .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
 @media (max-width: 880px) { .quotes { grid-template-columns: 1fr; } }
 .quote {
@@ -364,11 +383,12 @@ p { margin: 0 0 1.1em; }
   -webkit-backdrop-filter: blur(6px);
 }
 .quote p {
-  font-family: var(--font-hand);
-  font-size: 1.65rem;
-  line-height: 1.25;
+  font-family: var(--font-text);
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.55;
 }
-.quote footer { font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; color: #f2c98a; }
+.quote footer { font-family: var(--font-hand); font-size: 0.95rem; color: var(--white); }
 
 /* ---------- Planning ---------- */
 .week {
@@ -418,8 +438,8 @@ p { margin: 0 0 1.1em; }
   flex-direction: column;
   text-align: center;
   background: var(--white);
-  border-radius: 200px 200px var(--radius) var(--radius);
-  padding: 3.5rem 2rem 2.2rem;
+  border-radius: 22px;
+  padding: 2.6rem 2rem 2.2rem;
   border: 1px solid color-mix(in srgb, var(--ink) 7%, transparent);
 }
 .price--featured { background: var(--ink); color: var(--sand); }
@@ -435,7 +455,7 @@ p { margin: 0 0 1.1em; }
 .price p { font-size: 0.95rem; }
 .price .btn { margin-top: auto; align-self: center; }
 .price--featured .btn { background: var(--cream); color: var(--ink); border-color: var(--cream); }
-.price--featured .btn:hover { background: var(--sun); border-color: var(--sun); color: var(--white); }
+.price--featured .btn:hover { background: var(--white); border-color: var(--white); color: var(--ink-deep); }
 .note { font-size: 0.9rem; color: var(--muted); text-align: center; margin-top: 2.5rem; }
 
 /* ---------- Infos pratiques ---------- */
@@ -455,7 +475,7 @@ p { margin: 0 0 1.1em; }
   font-size: 0.95rem;
 }
 .site-footer a { color: var(--cream); text-decoration: none; }
-.site-footer a:hover { color: #f2c98a; }
+.site-footer a:hover { color: var(--white); text-decoration: underline; }
 .footer-grid {
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr;
@@ -468,7 +488,7 @@ p { margin: 0 0 1.1em; }
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #f2c98a;
+  color: var(--sand);
   margin: 0 0 1rem;
 }
 .site-footer ul { list-style: none; padding: 0; margin: 0; }
@@ -523,7 +543,7 @@ p { margin: 0 0 1.1em; }
   flex: none;
   width: 64px;
   height: 72px;
-  border-radius: 32px 32px 12px 12px;
+  border-radius: 14px;
   background: var(--ink);
   color: var(--cream);
   display: grid;
@@ -537,7 +557,7 @@ p { margin: 0 0 1.1em; }
 .cp-body b { font-family: var(--font-title); font-size: 1.35rem; font-weight: 500; color: var(--ink); }
 .cp-body span { font-size: 0.9rem; color: var(--muted); }
 .cp-places { flex: none; font-size: 0.85rem; color: var(--muted); }
-.cp-places.is-low { color: var(--sun); font-weight: 500; }
+.cp-places.is-low { color: var(--ink); font-weight: 600; }
 @media (max-width: 480px) {
   .class-pick { flex-wrap: wrap; }
   .cp-places { width: 100%; padding-left: calc(64px + 1.2rem); margin-top: -0.4rem; }
@@ -552,7 +572,7 @@ p { margin: 0 0 1.1em; }
   border: 1px solid color-mix(in srgb, var(--ink) 7%, transparent);
 }
 .booking-panel .selected::first-letter { text-transform: uppercase; }
-.booking-panel .selected { font-family: var(--font-title); font-size: 1.3rem; color: var(--sun); margin-top: -0.4rem; }
+.booking-panel .selected { font-family: var(--font-title); font-variation-settings: "SOFT" 100; font-size: 1.25rem; color: var(--ink-soft); margin-top: -0.4rem; }
 @media (max-width: 880px) { .booking-panel { position: static; } }
 
 /* Formulaires */
@@ -682,10 +702,17 @@ td .inline-form input[type="number"] { flex: 0 0 4.2rem; }
 .form textarea { resize: vertical; min-height: 7rem; }
 .quote-grid { align-items: start; }
 
-/* Chiffres : le « 1 » de Marcellus ressemble à un « I » — horaires, dates et prix en Jost */
+/* Chiffres : horaires, dates et prix dans la police de texte (lisibilité) */
 .cp-date b, .cp-body b, .slot-day b, .class b, .price .amount, .admin-class-count b, .admin-class h3 {
   font-family: var(--font-text);
   font-weight: 400;
 }
 .cp-body b { font-size: 1.15rem; color: var(--ink); }
 .price .amount { font-weight: 300; }
+
+/* Lunes : bleues sur fond clair, blanches sur fond bleu */
+.section--ink .moons { filter: brightness(0) invert(1); opacity: 0.75; }
+
+/* Option B — ajustements */
+.reviews .eyebrow { color: #e4e2f0; }
+h1 em, h2 em { font-size: max(0.5em, 1.05rem); }
