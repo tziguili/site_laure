@@ -842,3 +842,7 @@ td .inline-form input[type="number"] { flex: 0 0 4.2rem; }
 .page-entreprise .form input,
 .page-entreprise .form select,
 .page-entreprise .form textarea { background: #f8f4ef; border-color: var(--sand-deep); }
+
+/* Photo paysage dans un bloc image (ex. Entreprises) */
+.arch--landscape { aspect-ratio: 4 / 3; }
+.arch--landscape img { object-position: 45% center; }
