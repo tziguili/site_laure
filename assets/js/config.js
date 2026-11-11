@@ -1,8 +1,13 @@
 // Adresse de l'API de réservation (Cloudflare Worker, dossier api/).
-window.API_BASE =
-  location.hostname === "localhost" || location.hostname === "127.0.0.1"
-    ? "http://localhost:8787/api"
-    : "https://laure-yoga-api.laure-yoga-api.workers.dev/api";
+// En local, ajouter ?api=prod à l'adresse pour utiliser l'API déployée (mémorisé pour l'onglet).
+const PROD_API = "https://laure-yoga-api.laure-yoga-api.workers.dev/api";
+const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+try {
+  const q = new URLSearchParams(location.search).get("api");
+  if (isLocal && q) sessionStorage.setItem("lyc-api", q);
+} catch {}
+const useProd = (() => { try { return sessionStorage.getItem("lyc-api") === "prod"; } catch { return false; } })();
+window.API_BASE = isLocal && !useProd ? "http://localhost:8787/api" : PROD_API;
 
 window.api = async function api(path, { method = "GET", body, token } = {}) {
   const headers = {};

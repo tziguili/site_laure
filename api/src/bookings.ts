@@ -85,6 +85,8 @@ export interface NewBooking {
   payment: Payment;
   /** Ajout manuel par Laure : ignore la limite de places et le délai. */
   byAdmin?: boolean;
+  /** Adresse du site pour les retours Stripe (par défaut SITE_URL). */
+  siteUrl?: string;
 }
 
 export interface BookingResult {
@@ -166,8 +168,8 @@ export async function createBooking(env: Env, ctx: ExecutionContext, input: NewB
           amountCents: amount,
           email: input.email,
           metadata: { kind: "booking", booking_id: String(inserted.id) },
-          successUrl: `${env.SITE_URL}/merci.html?session_id={CHECKOUT_SESSION_ID}`,
-          cancelUrl: `${env.SITE_URL}/reserver.html?paiement=annule`,
+          successUrl: `${input.siteUrl ?? env.SITE_URL}/merci.html?session_id={CHECKOUT_SESSION_ID}`,
+          cancelUrl: `${input.siteUrl ?? env.SITE_URL}/reserver.html?paiement=annule`,
           expiresInMinutes: cfg.holdMinutes - 1,
         },
         `booking-${inserted.id}`,

@@ -6,6 +6,13 @@ import { HttpError, cleanEmail, cleanInt, cleanText, json, nowIso, readJson } fr
 
 const PAYMENTS: Payment[] = ["online", "on_site", "card"];
 
+/** Retours Stripe vers l'aperçu local quand la réservation vient de localhost (origine autorisée), sinon vers le site public. */
+function siteBase(req: Request, env: Env): string {
+  const origin = req.headers.get("origin") ?? "";
+  const allowed = env.ALLOWED_ORIGINS.split(",").map((s) => s.trim());
+  return /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin) && allowed.includes(origin) ? origin : env.SITE_URL;
+}
+
 /** GET /api/classes — cours à venir (8 semaines) avec places restantes. */
 export async function listClasses(env: Env): Promise<Response> {
   const now = nowIso();
@@ -46,6 +53,7 @@ export async function postBooking(req: Request, env: Env, ctx: ExecutionContext)
     email: cleanEmail(body.email),
     phone: cleanText(body.phone, "téléphone", 30, false),
     payment,
+    siteUrl: siteBase(req, env),
   });
   return json(result, 201);
 }
@@ -58,6 +66,7 @@ export async function postCard(req: Request, env: Env): Promise<Response> {
   const email = cleanEmail(body.email);
   const cfg = config(env);
   const now = nowIso();
+  const site = siteBase(req, env);
   const card = await env.DB.prepare(
     `INSERT INTO cards (name, email, credits_total, credits_left, amount_cents, payment, status, created_at)
      VALUES (?, ?, ?, ?, ?, 'online', 'pending', ?) RETURNING id`,
@@ -74,8 +83,8 @@ export async function postCard(req: Request, env: Env): Promise<Response> {
       amountCents: cfg.cardPrice,
       email,
       metadata: { kind: "card", card_id: String(card.id) },
-      successUrl: `${env.SITE_URL}/merci.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancelUrl: `${env.SITE_URL}/tarifs.html`,
+      successUrl: `${site}/merci.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${site}/tarifs.html`,
       expiresInMinutes: 60,
     },
     `card-${card.id}`,
