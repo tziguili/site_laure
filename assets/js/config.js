@@ -1,9 +1,8 @@
 // Adresse de l'API de réservation (Cloudflare Worker, dossier api/).
-// TODO : remplacer l'adresse de production après le premier `wrangler deploy`.
 window.API_BASE =
   location.hostname === "localhost" || location.hostname === "127.0.0.1"
     ? "http://localhost:8787/api"
-    : "https://laure-yoga-api.REMPLACER.workers.dev/api";
+    : "https://laure-yoga-api.laure-yoga-api.workers.dev/api";
 
 window.api = async function api(path, { method = "GET", body, token } = {}) {
   const headers = {};

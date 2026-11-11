@@ -31,5 +31,5 @@ ADMIN_EMAIL = "laureyogaclub@gmail.com"   # reçoit une notification à chaque r
 [[d1_databases]]
 binding = "DB"
 database_name = "laure-yoga"
-database_id = "00000000-0000-0000-0000-000000000000"   # remplacé après `wrangler d1 create laure-yoga`
+database_id = "64ee54fd-15d5-4d14-b539-aea07e39d813"
 migrations_dir = "migrations"
