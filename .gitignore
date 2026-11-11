@@ -1,0 +1,5 @@
+.DS_Store
+Thumbs.db
+*.Zone.Identifier
+.vscode/
+.claude/
