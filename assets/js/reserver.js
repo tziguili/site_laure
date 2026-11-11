@@ -14,7 +14,7 @@
 
   function renderClasses() {
     if (!data.classes.length) {
-      list.innerHTML = `<p class="empty">Aucun cours n'est ouvert à la réservation pour le moment. Revenez bientôt, ou écrivez-moi à <a href="mailto:laureyogaclub@gmail.com">laureyogaclub@gmail.com</a>.</p>`;
+      list.innerHTML = `<p class="empty">Aucun cours n'est ouvert à la réservation pour le moment. Revenez bientôt, ou écrivez-moi à <a href="mailto:contact@laureyogaclub.fr">contact@laureyogaclub.fr</a>.</p>`;
       return;
     }
     list.innerHTML = data.classes
