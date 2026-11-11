@@ -24,3 +24,12 @@ Les réservations passent par Setmore : https://laureyogaclub.setmore.com/book
 python3 -m http.server 8000
 ```
 puis ouvrir http://localhost:8000
+
+## Mode maintenance
+
+```
+./scripts/maintenance.sh on      # affiche la page « Le site prend une pause »
+./scripts/maintenance.sh off     # remet le site
+./scripts/maintenance.sh status
+```
+La page de maintenance est sur la branche `maintenance` (GitHub Pages publie cette branche au lieu de `main`). Effet en ~1 minute.
