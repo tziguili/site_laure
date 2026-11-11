@@ -12,7 +12,7 @@ ALLOWED_ORIGINS = "https://laureyogaclub.fr,https://www.laureyogaclub.fr,https:/
 PRICE_ONLINE_CENTS = "1700"      # cours payé en ligne
 PRICE_ON_SITE_CENTS = "1700"     # cours payé sur place
 PRICE_DISCOVERY_CENTS = "1400"   # premier cours, payé sur place
-CARD_PRICE_CENTS = "4800"        # TODO : prix réel de la carte 3 cours à confirmer avec Laure
+CARD_PRICE_CENTS = "4500"
 CARD_CREDITS = "3"
 
 DEFAULT_CAPACITY = "10"
