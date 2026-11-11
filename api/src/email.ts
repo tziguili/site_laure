@@ -35,11 +35,11 @@ export async function sendEmail(env: Env, mail: Mail): Promise<boolean> {
 }
 
 const layout = (title: string, body: string) => `<!doctype html>
-<html lang="fr"><body style="margin:0;background:#f6f0e6;font-family:Helvetica,Arial,sans-serif;color:#2b2a35">
+<html lang="fr"><body style="margin:0;background:#f6f0e6;font-family:Lora,Georgia,'Times New Roman',serif;color:#2b2a35">
 <div style="max-width:560px;margin:0 auto;padding:32px 24px">
   <p style="margin:0 0 24px;text-align:center;color:#484d75;line-height:1"><span style="font-family:Montserrat,Helvetica,Arial,sans-serif;font-weight:700;font-size:22px;letter-spacing:1px">LAURE</span><br><span style="font-family:Georgia,serif;font-size:20px">Yoga Club</span></p>
   <div style="background:#fffdf9;border-radius:16px;padding:28px">
-    <h1 style="font-family:Georgia,serif;font-weight:normal;font-size:24px;color:#484d75;margin:0 0 16px">${title}</h1>
+    <h1 style="font-family:Fraunces,Georgia,serif;font-weight:bold;font-size:24px;color:#484d75;margin:0 0 16px">${title}</h1>
     ${body}
   </div>
   <p style="font-size:12px;color:#6b6878;margin-top:24px">Maison Né — 25 rue Beccaria, 75012 Paris · laureyogaclub@gmail.com</p>
