@@ -815,3 +815,30 @@ td .inline-form input[type="number"] { flex: 0 0 4.2rem; }
   cursor: pointer;
 }
 .review-close:hover { background: var(--sand); }
+
+/* ============================================================
+   Page Entreprises : couleurs du flyer entreprise (brun & crème)
+   L'en-tête et le pied de page restent bleus (identité du site).
+   ============================================================ */
+.page-entreprise main {
+  --ink: #4b3d34;          /* brun du flyer */
+  --ink-deep: #3a2e27;
+  --ink-soft: #7a6352;
+  --sun: #7a6352;
+  --sand: #e5d7ca;         /* beige du flyer */
+  --sand-deep: #d3c0ae;
+  --cream: #f2ede7;
+  background: var(--cream);
+}
+.page-entreprise .trio { background-image: url("../img/flou-posture.webp"); }
+.page-entreprise .trio::before { background: linear-gradient(180deg, rgba(242, 237, 231, 0.85) 0%, rgba(242, 237, 231, 0.6) 32%, rgba(242, 237, 231, 0.05) 62%); }
+.page-entreprise .trio-item { background: rgba(75, 61, 52, 0.88); }
+.page-entreprise .trio-item .hand { color: #eadfd4; }
+.page-entreprise .trio-item p:last-child { color: #f1e9e1; }
+.page-entreprise .list-moon li::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Ccircle cx='13' cy='13' r='13' fill='%234b3d34'/%3E%3Cpath d='M7.5 13.5l3.6 3.6 7.4-7.6' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.page-entreprise .hero-meta span::before { color: var(--ink); }
+.page-entreprise .form input,
+.page-entreprise .form select,
+.page-entreprise .form textarea { background: #f8f4ef; border-color: var(--sand-deep); }
