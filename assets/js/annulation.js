@@ -28,7 +28,7 @@
   title.innerHTML = `${esc(b.title)}, <em>${esc(when)}</em>`;
   text.textContent = b.location;
   if (!b.can_cancel) {
-    text.textContent += ` — Le délai d'annulation en ligne est dépassé : pour tout changement, écrivez à contact@laureyogaclub.fr.`;
+    text.textContent += ` — Le délai d'annulation en ligne est dépassé : pour tout changement, écrivez à laureyogaclub@gmail.com.`;
     return;
   }
   cancelBtn.hidden = false;
