@@ -471,7 +471,7 @@ p { margin: 0 0 1.1em; }
 .site-footer a:hover { color: var(--white); text-decoration: underline; }
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: 2.5rem;
 }
 @media (max-width: 760px) { .footer-grid { grid-template-columns: 1fr; } }
@@ -817,10 +817,10 @@ td .inline-form input[type="number"] { flex: 0 0 4.2rem; }
 .review-close:hover { background: var(--sand); }
 
 /* ============================================================
-   Page Entreprises : couleurs du flyer entreprise (brun & crème)
-   L'en-tête et le pied de page restent bleus (identité du site).
+   Page Entreprises : couleurs du flyer entreprise (brun & crème),
+   appliquées à toute la page : logo, menu, bouton, pied de page.
    ============================================================ */
-.page-entreprise main {
+.page-entreprise {
   --ink: #4b3d34;          /* brun du flyer */
   --ink-deep: #3a2e27;
   --ink-soft: #7a6352;
@@ -846,3 +846,13 @@ td .inline-form input[type="number"] { flex: 0 0 4.2rem; }
 /* Photo paysage dans un bloc image (ex. Entreprises) */
 .arch--landscape { aspect-ratio: 4 / 3; }
 .arch--landscape img { object-position: 45% center; }
+
+/* Icône Instagram (pied de page) */
+.site-footer .social { margin-top: 0.6rem; }
+.site-footer .social a { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255, 253, 249, 0.45); transition: background 0.2s, border-color 0.2s; }
+.site-footer .social a:hover { background: rgba(255, 253, 249, 0.15); border-color: var(--white); text-decoration: none; }
+.site-footer .social svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.site-footer .social .dot { fill: currentColor; stroke: none; }
+
+/* Transition douce des couleurs (en-tête / pied de page) */
+.site-header .logo, .nav a, .site-header .btn, .site-footer { transition: color 0.4s, background-color 0.4s, border-color 0.4s; }
