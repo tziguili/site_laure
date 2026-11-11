@@ -67,7 +67,7 @@ const dateFmt = new Intl.DateTimeFormat("fr-FR", {
   day: "numeric",
   month: "long",
 });
-const timeFmt = new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", hour: "2-digit", minute: "2-digit" });
+const timeFmt = new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", hour: "numeric", minute: "2-digit" });
 
 /** « dimanche 15 novembre à 11:00 » */
 export function formatClassDate(iso: string): string {

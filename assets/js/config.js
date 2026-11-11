@@ -30,7 +30,7 @@ window.fmt = {
   dayShort: (iso) => new Intl.DateTimeFormat("fr-FR", { ...tz, weekday: "short" }).format(new Date(iso)).replace(".", ""),
   dayNum: (iso) => new Intl.DateTimeFormat("fr-FR", { ...tz, day: "numeric" }).format(new Date(iso)),
   month: (iso) => new Intl.DateTimeFormat("fr-FR", { ...tz, month: "short" }).format(new Date(iso)).replace(".", ""),
-  time: (iso) => new Intl.DateTimeFormat("fr-FR", { ...tz, hour: "2-digit", minute: "2-digit" }).format(new Date(iso)).replace(":00", "h").replace(":", "h"),
+  time: (iso) => new Intl.DateTimeFormat("fr-FR", { ...tz, hour: "numeric", minute: "2-digit" }).format(new Date(iso)).replace(":00", "h").replace(":", "h"),
   euros: (cents) => (cents / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: cents % 100 ? 2 : 0 }),
 };
 

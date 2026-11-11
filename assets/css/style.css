@@ -45,6 +45,7 @@ body {
 }
 
 img { max-width: 100%; display: block; }
+[hidden] { display: none !important; }
 
 a { color: var(--ink); text-underline-offset: 0.2em; }
 a:hover { color: var(--sun); }
@@ -680,3 +681,11 @@ td .inline-form input[type="number"] { flex: 0 0 4.2rem; }
 
 .form textarea { resize: vertical; min-height: 7rem; }
 .quote-grid { align-items: start; }
+
+/* Chiffres : le « 1 » de Marcellus ressemble à un « I » — horaires, dates et prix en Jost */
+.cp-date b, .cp-body b, .slot-day b, .class b, .price .amount, .admin-class-count b, .admin-class h3 {
+  font-family: var(--font-text);
+  font-weight: 400;
+}
+.cp-body b { font-size: 1.15rem; color: var(--ink); }
+.price .amount { font-weight: 300; }
