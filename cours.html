@@ -12,7 +12,7 @@
   <link rel="icon" href="assets/img/lune.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Jost:wght@300;400;500&family=Marcellus&family=Montserrat:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
   <script>document.documentElement.classList.add("js")</script>
 </head>
@@ -20,16 +20,17 @@
 
 <header class="site-header">
   <div class="wrap">
-    <a class="logo" href="index.html"><img src="assets/img/lune.svg" alt="">Laure <span>Yoga Club</span></a>
+    <a class="logo" href="index.html" aria-label="Laure Yoga Club — accueil"><b>LAURE</b><span>Yoga Club</span></a>
     <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Ouvrir le menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
     </button>
     <nav class="nav" id="nav">
       <ul>
         <li><a href="index.html">Accueil</a></li>
-        <li><a href="cours.html" aria-current="page">Cours collectifs</a></li>
+        <li><a href="cours.html" aria-current="page">Cours</a></li>
         <li><a href="planning.html">Planning</a></li>
         <li><a href="tarifs.html">Tarifs</a></li>
+        <li><a href="entreprises.html">Entreprises</a></li>
         <li><a href="a-propos.html">À propos</a></li>
       </ul>
       <a class="btn" href="reserver.html">Réserver</a>
@@ -52,7 +53,7 @@
     <div class="arch reveal">
       <img src="assets/img/plein-air-600.webp"
            srcset="assets/img/plein-air-600.webp 600w, assets/img/plein-air-1000.webp 1000w"
-           sizes="(max-width: 880px) 100vw, 45vw" width="600" height="747" loading="lazy"
+           sizes="(max-width: 880px) 100vw, 45vw" width="600" height="677" loading="lazy"
            alt="Laure en étirement pendant un cours de yoga en plein air">
     </div>
     <div class="reveal">
@@ -66,7 +67,7 @@
         <li>la respiration</li>
         <li>et un temps de relaxation pour terminer</li>
       </ul>
-      <p>Les groupes restent petits pour que je puisse passer auprès de chacun et proposer des conseils personnalisés.</p>
+      <p>Les groupes restent petits (8 personnes maximum) pour que je puisse passer auprès de chacun·e et proposer des conseils personnalisés.</p>
     </div>
   </div>
 </section>
@@ -107,11 +108,38 @@
       <dd>Maison Né — 25 rue Beccaria, 75012 Paris<br>Près de la place d'Aligre, à 5 min à pied de Gare de Lyon</dd>
       <dt>Durée</dt>
       <dd>1 heure</dd>
+      <dt>Groupe</dt>
+      <dd>8 personnes maximum, matériel fourni</dd>
       <dt>Niveau</dt>
-      <dd>Tous niveaux, débutants bienvenus</dd>
+      <dd>Tous niveaux, accessible aux débutant·e·s</dd>
       <dt>Formule</dt>
       <dd>À la carte et sans engagement</dd>
     </dl>
+  </div>
+</section>
+
+<section class="section" id="particuliers">
+  <div class="wrap grid-2">
+    <div class="reveal">
+      <span class="eyebrow">Cours particuliers</span>
+      <h2>Une séance <em>rien que pour vous.</em></h2>
+      <ul class="list-moon">
+        <li>À domicile ou dans un espace loué</li>
+        <li>100 % personnalisé : objectifs, rythme, niveau</li>
+        <li>Idéal pour débuter en confiance ou approfondir sa pratique</li>
+      </ul>
+      <p>Tarif sur demande, selon le lieu et la fréquence.</p>
+      <div class="btn-row">
+        <a class="btn" href="mailto:laureyogaclub@gmail.com?subject=Cours%20particulier">Me contacter</a>
+        <a class="btn btn--ghost" href="tel:+33664791185">06 64 79 11 85</a>
+      </div>
+    </div>
+    <div class="arch reveal">
+      <img src="assets/img/laure-lumiere-700.webp"
+           srcset="assets/img/laure-lumiere-700.webp 700w, assets/img/laure-lumiere-1080.webp 1080w"
+           sizes="(max-width: 880px) 100vw, 45vw" width="700" height="1244" loading="lazy"
+           alt="Laure en posture assise, dans la lumière">
+    </div>
   </div>
 </section>
 
@@ -121,7 +149,7 @@
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <a class="logo" href="index.html">Laure <span>Yoga Club</span></a>
+        <a class="logo" href="index.html" aria-label="Laure Yoga Club — accueil"><b>LAURE</b><span>Yoga Club</span></a>
         <p>Cours de yoga collectifs et inclusifs à Paris 12e.</p>
       </div>
       <div>

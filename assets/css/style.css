@@ -1,20 +1,24 @@
 /* ============================================================
    Laure Yoga Club — feuille de style
-   Palette : crème chaude, bleu nuit (le tapis), or (la lumière)
+   Identité : logo LAURE / Yoga Club, bleu ardoise des flyers,
+   titres Marcellus, annotations manuscrites (Caveat)
    ============================================================ */
 
 :root {
   --cream: #f6f0e6;
   --sand: #ebe0cd;
   --sand-deep: #dccbb0;
-  --ink: #1d2550;        /* bleu nuit */
-  --ink-soft: #464e7a;
+  --ink: #484d75;        /* bleu du logo et des flyers */
+  --ink-deep: #363a5c;
+  --ink-soft: #5d628a;
   --sun: #c98f45;        /* or chaud */
   --text: #2b2a35;
   --muted: #6b6878;
   --white: #fffdf9;
 
-  --font-title: "Cormorant Garamond", "Times New Roman", Georgia, serif;
+  --font-title: "Marcellus", "Times New Roman", Georgia, serif;
+  --font-logo: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  --font-hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
   --font-text: "Jost", "Helvetica Neue", Arial, sans-serif;
 
   --radius: 18px;
@@ -47,15 +51,24 @@ a:hover { color: var(--sun); }
 
 h1, h2, h3 {
   font-family: var(--font-title);
-  font-weight: 500;
+  font-weight: 400;
   color: var(--ink);
   line-height: 1.1;
   margin: 0 0 0.5em;
 }
-h1 { font-size: clamp(2.8rem, 7vw, 5.2rem); letter-spacing: -0.01em; }
-h2 { font-size: clamp(2.1rem, 4.5vw, 3.2rem); }
-h3 { font-size: 1.6rem; }
-h1 em, h2 em { color: var(--sun); font-style: italic; }
+h1 { font-size: clamp(2.5rem, 6vw, 4.4rem); }
+h2 { font-size: clamp(1.9rem, 4vw, 2.8rem); }
+h3 { font-size: 1.45rem; }
+/* Mots en accent : écriture manuscrite, comme les annotations des flyers */
+h1 em, h2 em {
+  font-family: var(--font-hand);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1.18em;
+  color: var(--sun);
+  line-height: 0.9;
+}
+.hand { font-family: var(--font-hand); font-weight: 500; color: var(--sun); font-size: 1.5rem; line-height: 1.2; }
 
 p { margin: 0 0 1.1em; }
 
@@ -116,18 +129,18 @@ p { margin: 0 0 1.1em; }
   min-height: 76px;
   gap: 1rem;
 }
+/* Logo : « LAURE » (Montserrat Bold) au-dessus de « Yoga Club » (Marcellus) */
 .logo {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.6rem;
-  font-family: var(--font-title);
-  font-size: 1.55rem;
-  font-weight: 600;
+  line-height: 1;
   color: var(--ink);
   text-decoration: none;
 }
-.logo img { width: 28px; height: 28px; }
-.logo span { font-style: italic; font-weight: 400; color: var(--sun); }
+.logo b { font-family: var(--font-logo); font-weight: 700; font-size: 1.32rem; letter-spacing: 0.03em; }
+.logo span { font-family: var(--font-title); font-size: 1.22rem; margin-top: 0.08em; }
+.logo:hover { color: var(--ink-deep); }
 
 .nav { display: flex; align-items: center; gap: 2rem; }
 .nav ul { display: flex; gap: 1.7rem; list-style: none; margin: 0; padding: 0; }
@@ -161,7 +174,7 @@ p { margin: 0 0 1.1em; }
 }
 .nav-toggle svg { width: 28px; height: 28px; }
 
-@media (max-width: 880px) {
+@media (max-width: 1040px) {
   .nav-toggle { display: block; }
   .nav {
     position: absolute;
@@ -294,6 +307,28 @@ p { margin: 0 0 1.1em; }
   .slot .btn { margin-left: 0; }
 }
 
+/* Trio Énergie / Mobilité / Relaxation */
+.trio-item { text-align: center; padding: 0 1rem; }
+.trio-item .hand { margin-bottom: 0.4rem; transform: rotate(-3deg); }
+.trio-item h3 { font-size: 2rem; margin-bottom: 0.3em; }
+.trio-item p:last-child { color: var(--ink-soft); }
+
+/* Autres formules (entreprises, particuliers) */
+.offers { align-items: stretch; }
+.offer {
+  display: block;
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 2.2rem;
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid color-mix(in srgb, var(--ink) 7%, transparent);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.offer:hover { color: var(--text); transform: translateY(-3px); box-shadow: 0 20px 40px -28px rgba(54, 58, 92, 0.6); }
+.offer h3 { font-size: 1.8rem; }
+.offer-link { font-weight: 500; color: var(--ink); }
+
 /* Liste à puces lune */
 .list-moon { list-style: none; padding: 0; margin: 0 0 1.5rem; }
 .list-moon li { padding-left: 1.8rem; position: relative; margin-bottom: 0.6rem; }
@@ -328,10 +363,9 @@ p { margin: 0 0 1.1em; }
   -webkit-backdrop-filter: blur(6px);
 }
 .quote p {
-  font-family: var(--font-title);
-  font-size: 1.4rem;
-  font-style: italic;
-  line-height: 1.35;
+  font-family: var(--font-hand);
+  font-size: 1.65rem;
+  line-height: 1.25;
 }
 .quote footer { font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; color: #f2c98a; }
 
@@ -496,7 +530,7 @@ p { margin: 0 0 1.1em; }
   text-align: center;
   line-height: 1.05;
 }
-.cp-date b { font-family: var(--font-title); font-size: 1.7rem; font-weight: 500; }
+.cp-date b { font-family: var(--font-title); font-size: 1.6rem; }
 .cp-date small { font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; }
 .cp-body { flex: 1; display: grid; }
 .cp-body b { font-family: var(--font-title); font-size: 1.35rem; font-weight: 500; color: var(--ink); }
@@ -526,6 +560,7 @@ p { margin: 0 0 1.1em; }
 .form label small { color: var(--muted); font-weight: 300; }
 .form input,
 .form select,
+.form textarea,
 .inline-form input,
 .inline-form select {
   font: inherit;
@@ -539,6 +574,7 @@ p { margin: 0 0 1.1em; }
 }
 .form input:focus,
 .form select:focus,
+.form textarea:focus,
 .inline-form input:focus { outline: 2px solid var(--sun); outline-offset: 1px; border-color: transparent; }
 .form fieldset { border: 0; padding: 0; margin: 0.4rem 0 0; display: grid; gap: 0.6rem; }
 .form legend { font-size: 0.9rem; color: var(--ink); margin-bottom: 0.5rem; }
@@ -641,3 +677,6 @@ td .inline-form input[type="number"] { flex: 0 0 4.2rem; }
   z-index: 50;
 }
 .toast--error { background: #8a2b22; }
+
+.form textarea { resize: vertical; min-height: 7rem; }
+.quote-grid { align-items: start; }

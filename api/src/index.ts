@@ -28,6 +28,7 @@ async function route(req: Request, env: Env, ctx: ExecutionContext): Promise<Res
   if (m === "GET" && path === "/api/classes") return pub.listClasses(env);
   if (m === "POST" && path === "/api/bookings") return pub.postBooking(req, env, ctx);
   if (m === "POST" && path === "/api/cards") return pub.postCard(req, env);
+  if (m === "POST" && path === "/api/contact") return pub.postContact(req, env, ctx);
   if (m === "GET" && (p = path.match(/^\/api\/checkout\/([\w-]+)$/))) return pub.getCheckoutStatus(env, p[1]!);
   if (m === "GET" && (p = path.match(/^\/api\/bookings\/([\w-]+)$/))) return pub.getBooking(env, p[1]!);
   if (m === "POST" && (p = path.match(/^\/api\/bookings\/([\w-]+)\/cancel$/))) return pub.postCancel(env, p[1]!);

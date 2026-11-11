@@ -2,6 +2,7 @@
 import { ACTIVE_BOOKING, bookingInfo, cancelBooking, cancelDeadline, createBooking, type Payment } from "./bookings";
 import { config, type Env } from "./env";
 import { createCheckoutSession } from "./stripe";
+import { quoteAckEmail, quoteRequestEmail, sendEmail } from "./email";
 import { HttpError, cleanEmail, cleanInt, cleanText, json, nowIso, readJson } from "./util";
 
 const PAYMENTS: Payment[] = ["online", "on_site", "card"];
@@ -141,4 +142,24 @@ export async function postCancel(env: Env, token: string): Promise<Response> {
     throw new HttpError(403, `Le délai d'annulation en ligne (${config(env).cancelHours} h avant le cours) est dépassé. Contactez Laure directement.`);
   const note = await cancelBooking(env, b.id, "customer");
   return json({ ok: true, note });
+}
+
+/** POST /api/contact — demande de devis entreprise. */
+export async function postContact(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const body = await readJson(req);
+  if (body.website) return json({ ok: true }); // champ piège : on fait comme si tout allait bien
+  const q = {
+    name: cleanText(body.name, "nom"),
+    company: cleanText(body.company, "entreprise", 120),
+    email: cleanEmail(body.email),
+    phone: cleanText(body.phone, "téléphone", 30, false),
+    participants: cleanText(body.participants, "participants", 40, false),
+    place: cleanText(body.place, "lieu", 60, false),
+    message: String(body.message ?? "").trim().slice(0, 3000),
+  };
+  if (!env.ADMIN_EMAIL) throw new HttpError(500, "Formulaire indisponible, écrivez à laureyogaclub@gmail.com.");
+  if (!(await sendEmail(env, quoteRequestEmail(env, q))))
+    throw new HttpError(502, "L'envoi a échoué. Réessayez, ou écrivez directement à laureyogaclub@gmail.com.");
+  ctx.waitUntil(sendEmail(env, quoteAckEmail(q)));
+  return json({ ok: true }, 201);
 }

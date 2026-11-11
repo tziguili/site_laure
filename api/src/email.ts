@@ -7,12 +7,14 @@ interface Mail {
   to: string;
   subject: string;
   html: string;
+  replyTo?: string;
 }
 
-export async function sendEmail(env: Env, mail: Mail): Promise<void> {
+/** Envoie un email ; renvoie false en cas d'échec (sans lever d'erreur). */
+export async function sendEmail(env: Env, mail: Mail): Promise<boolean> {
   if (!env.RESEND_API_KEY) {
     console.log(`[email non envoyé — pas de RESEND_API_KEY] à ${mail.to} : ${mail.subject}`);
-    return;
+    return true;
   }
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -20,20 +22,24 @@ export async function sendEmail(env: Env, mail: Mail): Promise<void> {
     body: JSON.stringify({
       from: env.EMAIL_FROM,
       to: [mail.to],
-      reply_to: env.EMAIL_REPLY_TO || undefined,
+      reply_to: mail.replyTo || env.EMAIL_REPLY_TO || undefined,
       subject: mail.subject,
       html: mail.html,
     }),
   });
-  if (!res.ok) console.error("Resend error", res.status, await res.text());
+  if (!res.ok) {
+    console.error("Resend error", res.status, await res.text());
+    return false;
+  }
+  return true;
 }
 
 const layout = (title: string, body: string) => `<!doctype html>
 <html lang="fr"><body style="margin:0;background:#f6f0e6;font-family:Helvetica,Arial,sans-serif;color:#2b2a35">
 <div style="max-width:560px;margin:0 auto;padding:32px 24px">
-  <p style="font-family:Georgia,serif;font-size:22px;color:#1d2550;margin:0 0 24px">☾ Laure <em style="color:#c98f45">Yoga Club</em></p>
+  <p style="margin:0 0 24px;text-align:center;color:#484d75;line-height:1"><span style="font-family:Montserrat,Helvetica,Arial,sans-serif;font-weight:700;font-size:22px;letter-spacing:1px">LAURE</span><br><span style="font-family:Georgia,serif;font-size:20px">Yoga Club</span></p>
   <div style="background:#fffdf9;border-radius:16px;padding:28px">
-    <h1 style="font-family:Georgia,serif;font-weight:normal;font-size:24px;color:#1d2550;margin:0 0 16px">${title}</h1>
+    <h1 style="font-family:Georgia,serif;font-weight:normal;font-size:24px;color:#484d75;margin:0 0 16px">${title}</h1>
     ${body}
   </div>
   <p style="font-size:12px;color:#6b6878;margin-top:24px">Maison Né — 25 rue Beccaria, 75012 Paris · laureyogaclub@gmail.com</p>
@@ -41,7 +47,7 @@ const layout = (title: string, body: string) => `<!doctype html>
 
 const p = (s: string) => `<p style="margin:0 0 14px;line-height:1.6">${s}</p>`;
 const btn = (href: string, label: string) =>
-  `<p style="margin:22px 0 6px"><a href="${e(href)}" style="display:inline-block;background:#1d2550;color:#f6f0e6;padding:12px 22px;border-radius:999px;text-decoration:none;font-size:14px">${label}</a></p>`;
+  `<p style="margin:22px 0 6px"><a href="${e(href)}" style="display:inline-block;background:#484d75;color:#f6f0e6;padding:12px 22px;border-radius:999px;text-decoration:none;font-size:14px">${label}</a></p>`;
 
 export interface BookingInfo {
   name: string;
@@ -128,6 +134,47 @@ export function adminNotificationEmail(env: Env, b: BookingInfo, placesLeft: num
       p(`<b>${e(b.name)}</b> (${e(b.email)}) a réservé le cours du <b>${formatClassDate(b.starts_at)}</b>.`) +
         p(`Paiement : ${how}.<br>Places restantes : ${placesLeft}.`) +
         btn(`${env.SITE_URL}/admin.html`, "Voir le planning"),
+    ),
+  };
+}
+
+export interface QuoteRequest {
+  name: string;
+  company: string;
+  email: string;
+  phone: string;
+  participants: string;
+  place: string;
+  message: string;
+}
+
+/** Demande de devis entreprise → Laure (répondre = répondre au demandeur). */
+export function quoteRequestEmail(env: Env, q: QuoteRequest): Mail {
+  const row = (label: string, value: string) =>
+    value ? `<tr><td style="padding:4px 12px 4px 0;color:#6b6878">${label}</td><td style="padding:4px 0"><b>${e(value)}</b></td></tr>` : "";
+  return {
+    to: env.ADMIN_EMAIL,
+    replyTo: q.email,
+    subject: `Demande de devis entreprise — ${q.company}`,
+    html: layout(
+      "Nouvelle demande de devis",
+      `<table style="border-collapse:collapse;margin:0 0 16px;font-size:15px">
+        ${row("Entreprise", q.company)}${row("Contact", q.name)}${row("Email", q.email)}${row("Téléphone", q.phone)}
+        ${row("Participants", q.participants)}${row("Lieu souhaité", q.place)}
+      </table>` + (q.message ? p(e(q.message).replace(/\n/g, "<br>")) : "") + p("Répondez simplement à cet email pour écrire directement à cette personne."),
+    ),
+  };
+}
+
+/** Accusé de réception envoyé au demandeur. */
+export function quoteAckEmail(q: QuoteRequest): Mail {
+  return {
+    to: q.email,
+    subject: "Votre demande de yoga en entreprise",
+    html: layout(
+      `Merci ${e(q.name.split(" ")[0])} !`,
+      p(`J'ai bien reçu votre demande pour <b>${e(q.company)}</b> et je reviens vers vous très rapidement pour imaginer ensemble vos séances de yoga.`) +
+        p("À très vite,<br>Laure<br>06 64 79 11 85"),
     ),
   };
 }
