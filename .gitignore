@@ -4,3 +4,6 @@ Thumbs.db
 .vscode/
 .claude/
 src/design/
+api/node_modules/
+api/.wrangler/
+api/.dev.vars

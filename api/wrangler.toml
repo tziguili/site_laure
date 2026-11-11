@@ -1,0 +1,35 @@
+name = "laure-yoga-api"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+
+[vars]
+# Adresse publique du site (pour les liens de retour Stripe et les emails)
+SITE_URL = "https://laureyogaclub.fr"
+# Origines autorisées à appeler l'API (séparées par des virgules)
+ALLOWED_ORIGINS = "https://laureyogaclub.fr,https://www.laureyogaclub.fr,https://tziguili.github.io,http://localhost:8765"
+
+# Tarifs, en centimes
+PRICE_ONLINE_CENTS = "1700"      # cours payé en ligne
+PRICE_ON_SITE_CENTS = "1700"     # cours payé sur place
+PRICE_DISCOVERY_CENTS = "1400"   # premier cours, payé sur place
+CARD_PRICE_CENTS = "4500"
+CARD_CREDITS = "3"
+
+DEFAULT_CAPACITY = "8"               # groupes de 8 max (flyer)
+CANCEL_HOURS = "24"              # annulation possible jusqu'à X heures avant le cours
+HOLD_MINUTES = "35"              # place gardée pendant le paiement en ligne (Stripe : 30 min min.)
+
+# Emails (Resend) — domaine laureyogaclub.fr vérifié dans Resend.
+EMAIL_FROM = "Laure Yoga Club <reservations@laureyogaclub.fr>"
+EMAIL_REPLY_TO = "laureyogaclub@gmail.com"
+ADMIN_EMAIL = "laureyogaclub@gmail.com"   # reçoit une notification à chaque réservation
+
+# Secrets (à NE PAS mettre ici) — `wrangler secret put <NOM>` en production,
+# fichier api/.dev.vars en local :
+#   STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, ADMIN_PASSWORD, RESEND_API_KEY
+
+[[d1_databases]]
+binding = "DB"
+database_name = "laure-yoga"
+database_id = "64ee54fd-15d5-4d14-b539-aea07e39d813"
+migrations_dir = "migrations"
