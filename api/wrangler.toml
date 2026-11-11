@@ -4,9 +4,9 @@ compatibility_date = "2026-10-01"
 
 [vars]
 # Adresse publique du site (pour les liens de retour Stripe et les emails)
-SITE_URL = "https://tziguili.github.io/site_laure"
+SITE_URL = "https://laureyogaclub.fr"
 # Origines autorisées à appeler l'API (séparées par des virgules)
-ALLOWED_ORIGINS = "https://tziguili.github.io,http://localhost:8765"
+ALLOWED_ORIGINS = "https://laureyogaclub.fr,https://www.laureyogaclub.fr,https://tziguili.github.io,http://localhost:8765"
 
 # Tarifs, en centimes
 PRICE_ONLINE_CENTS = "1700"      # cours payé en ligne
@@ -19,8 +19,8 @@ DEFAULT_CAPACITY = "10"
 CANCEL_HOURS = "24"              # annulation possible jusqu'à X heures avant le cours
 HOLD_MINUTES = "35"              # place gardée pendant le paiement en ligne (Stripe : 30 min min.)
 
-# Emails (Resend). EMAIL_FROM doit appartenir à un domaine vérifié dans Resend.
-EMAIL_FROM = "Laure Yoga Club <reservations@example.com>"
+# Emails (Resend) — domaine laureyogaclub.fr vérifié dans Resend.
+EMAIL_FROM = "Laure Yoga Club <reservations@laureyogaclub.fr>"
 EMAIL_REPLY_TO = "laureyogaclub@gmail.com"
 ADMIN_EMAIL = "laureyogaclub@gmail.com"   # reçoit une notification à chaque réservation
 
