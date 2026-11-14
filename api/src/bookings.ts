@@ -125,13 +125,13 @@ export async function createBooking(env: Env, ctx: ExecutionContext, input: NewB
     const card = await db
       .prepare(
         `UPDATE cards SET credits_left = credits_left - 1
-         WHERE id = (SELECT id FROM cards WHERE email = ? AND status = 'active' AND credits_left > 0 ORDER BY id LIMIT 1)
+         WHERE id = (SELECT id FROM cards WHERE email = ? AND status = 'active' AND credits_left > 0 AND created_at >= ? ORDER BY id LIMIT 1)
            AND credits_left > 0
          RETURNING id, credits_left`,
       )
-      .bind(input.email)
+      .bind(input.email, new Date(Date.now() - cfg.cardValidityDays * 86_400_000).toISOString())
       .first<{ id: number; credits_left: number }>();
-    if (!card) throw new HttpError(402, "Aucune carte avec des cours restants n'est associée à cette adresse email.");
+    if (!card) throw new HttpError(402, "Aucune carte valide avec des cours restants n'est associée à cette adresse email (une carte est valable 1 an).");
     cardId = card.id;
     creditsLeft = card.credits_left;
   }

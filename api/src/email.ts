@@ -110,14 +110,15 @@ export function classCancelledEmail(b: BookingInfo, refundNote: string): Mail {
   };
 }
 
-export function cardActivatedEmail(env: Env, c: { name: string; email: string; credits_total: number; amount_cents: number }): Mail {
+export function cardActivatedEmail(env: Env, c: { name: string; email: string; credits_total: number; amount_cents: number; created_at: string }, validityDays: number): Mail {
+  const until = new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", day: "numeric", month: "long", year: "numeric" }).format(new Date(new Date(c.created_at).getTime() + validityDays * 86_400_000));
   return {
     to: c.email,
     subject: `Votre carte ${c.credits_total} cours est active`,
     html: layout(
       `Merci ${e(c.name.split(" ")[0])} !`,
-      p(`Votre carte <b>${c.credits_total} cours</b> (${euros(c.amount_cents)}) est active.`) +
-        p(`Pour l'utiliser, réservez un cours sur le site en choisissant « Carte ${c.credits_total} cours » et en indiquant cette adresse email : <b>${e(c.email)}</b>.`) +
+      p(`Votre carte <b>${c.credits_total} cours</b> (${euros(c.amount_cents)}) est active. Elle est valable jusqu'au <b>${until}</b>.`) +
+        p(`Pour l'utiliser, réservez un cours sur le site en choisissant « J'ai déjà une carte ${c.credits_total} cours » et en indiquant cette adresse email : <b>${e(c.email)}</b>.`) +
         btn(`${env.SITE_URL}/reserver.html`, "Réserver un cours") +
         p(`À très vite,<br>Laure`),
     ),

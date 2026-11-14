@@ -226,7 +226,7 @@
                   <td><b>${esc(c.name)}</b></td>
                   <td>${esc(c.email)}</td>
                   <td><form class="inline-form" data-card="${c.id}"><input name="credits_left" type="number" min="0" max="50" value="${c.credits_left}"> / ${c.credits_total} <button class="link-btn" type="submit">ok</button></form></td>
-                  <td>${c.payment === "online" ? "En ligne" : "Sur place"} · ${fmt.euros(c.amount_cents)}<br><small class="muted">${new Date(c.created_at).toLocaleDateString("fr-FR")}</small></td>
+                  <td>${c.payment === "online" ? "En ligne" : "Sur place"} · ${fmt.euros(c.amount_cents)}<br><small class="muted">achetée le ${new Date(c.created_at).toLocaleDateString("fr-FR")} · ${new Date(c.created_at).getTime() + 365 * 86400000 < Date.now() ? "<b>expirée</b>" : "valable jusqu'au " + new Date(new Date(c.created_at).getTime() + 365 * 86400000).toLocaleDateString("fr-FR")}</small></td>
                 </tr>`,
               )
               .join("")}

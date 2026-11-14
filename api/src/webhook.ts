@@ -1,6 +1,7 @@
 // Webhook Stripe : confirme les paiements, libère les places des paiements abandonnés.
 import { notifyConfirmed } from "./bookings";
 import { cardActivatedEmail, sendEmail } from "./email";
+import { config } from "./env";
 import type { Env } from "./env";
 import { verifyWebhook } from "./stripe";
 import { json, nowIso } from "./util";
@@ -25,8 +26,8 @@ export async function stripeWebhook(req: Request, env: Env, ctx: ExecutionContex
         "UPDATE cards SET status = 'active', payment_intent = ? WHERE id = ? AND stripe_session_id = ? AND status = 'pending' RETURNING *",
       )
         .bind(session.payment_intent, Number(meta.card_id), session.id)
-        .first<{ name: string; email: string; credits_total: number; amount_cents: number }>();
-      if (card) ctx.waitUntil(sendEmail(env, cardActivatedEmail(env, card)));
+        .first<{ name: string; email: string; credits_total: number; amount_cents: number; created_at: string }>();
+      if (card) ctx.waitUntil(sendEmail(env, cardActivatedEmail(env, card, config(env).cardValidityDays)));
     }
   }
 

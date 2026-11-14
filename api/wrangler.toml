@@ -14,6 +14,7 @@ PRICE_ON_SITE_CENTS = "1700"     # cours payé sur place
 PRICE_DISCOVERY_CENTS = "1400"   # premier cours, payé sur place
 CARD_PRICE_CENTS = "4500"
 CARD_CREDITS = "3"
+CARD_VALIDITY_DAYS = "365"       # carte 3 cours valable 1 an à partir de l'achat
 
 DEFAULT_CAPACITY = "8"               # groupes de 8 max (flyer)
 CANCEL_HOURS = "24"              # annulation possible jusqu'à X heures avant le cours
