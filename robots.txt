@@ -1,0 +1,23 @@
+# Laure Yoga Club — laureyogaclub.fr
+# Moteurs de recherche et assistants IA bienvenus.
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /merci.html
+Disallow: /annulation.html
+Disallow: /api/
+Disallow: /src/
+
+# Assistants IA (recherche et citations) — explicitement autorisés
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: PerplexityBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin.html
+
+Sitemap: https://laureyogaclub.fr/sitemap.xml
