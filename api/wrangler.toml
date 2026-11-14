@@ -21,7 +21,7 @@ HOLD_MINUTES = "35"              # place gardée pendant le paiement en ligne (S
 
 # Emails (Resend) — domaine laureyogaclub.fr vérifié dans Resend.
 EMAIL_FROM = "Laure Yoga Club <reservations@laureyogaclub.fr>"
-EMAIL_REPLY_TO = "laureyogaclub@gmail.com"
+EMAIL_REPLY_TO = "contact@laureyogaclub.fr"
 ADMIN_EMAIL = "laureyogaclub@gmail.com"   # reçoit une notification à chaque réservation
 
 # Secrets (à NE PAS mettre ici) — `wrangler secret put <NOM>` en production,

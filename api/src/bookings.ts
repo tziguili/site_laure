@@ -114,7 +114,8 @@ export async function createBooking(env: Env, ctx: ExecutionContext, input: NewB
 
   // Montant dû
   let amount = 0;
-  if (input.payment === "online") amount = cfg.priceOnline;
+  // Tarif découverte (premier cours pour cet email) appliqué aussi en ligne.
+  if (input.payment === "online") amount = (await isFirstClass(db, input.email)) ? cfg.priceDiscovery : cfg.priceOnline;
   else if (input.payment === "on_site") amount = (await isFirstClass(db, input.email)) ? cfg.priceDiscovery : cfg.priceOnSite;
 
   // Carte : on débite un crédit d'abord (atomique), on le rendra si le cours est complet.

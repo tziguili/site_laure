@@ -19,7 +19,7 @@
     } finally {
       msg.hidden = false;
       btn.disabled = false;
-      btn.textContent = "Envoyer ma demande";
+      btn.textContent = "Être recontacté·e";
     }
   });
 })();

@@ -42,7 +42,7 @@ const layout = (title: string, body: string) => `<!doctype html>
     <h1 style="font-family:Fraunces,Georgia,serif;font-weight:bold;font-size:24px;color:#484d75;margin:0 0 16px">${title}</h1>
     ${body}
   </div>
-  <p style="font-size:12px;color:#6b6878;margin-top:24px">Maison Né — 25 rue Beccaria, 75012 Paris · laureyogaclub@gmail.com</p>
+  <p style="font-size:12px;color:#6b6878;margin-top:24px">Laure Yoga Club · laureyogaclub.fr · contact@laureyogaclub.fr</p>
 </div></body></html>`;
 
 const p = (s: string) => `<p style="margin:0 0 14px;line-height:1.6">${s}</p>`;
@@ -139,6 +139,7 @@ export function adminNotificationEmail(env: Env, b: BookingInfo, placesLeft: num
 }
 
 export interface QuoteRequest {
+  kind: "particulier" | "entreprise";
   name: string;
   company: string;
   email: string;
@@ -155,9 +156,9 @@ export function quoteRequestEmail(env: Env, q: QuoteRequest): Mail {
   return {
     to: env.ADMIN_EMAIL,
     replyTo: q.email,
-    subject: `Demande de devis entreprise — ${q.company}`,
+    subject: q.kind === "particulier" ? `Demande de cours particulier — ${q.name}` : `Demande de devis entreprise — ${q.company}`,
     html: layout(
-      "Nouvelle demande de devis",
+      q.kind === "particulier" ? "Nouvelle demande de cours particulier" : "Nouvelle demande de devis",
       `<table style="border-collapse:collapse;margin:0 0 16px;font-size:15px">
         ${row("Entreprise", q.company)}${row("Contact", q.name)}${row("Email", q.email)}${row("Téléphone", q.phone)}
         ${row("Participants", q.participants)}${row("Lieu souhaité", q.place)}
@@ -170,10 +171,12 @@ export function quoteRequestEmail(env: Env, q: QuoteRequest): Mail {
 export function quoteAckEmail(q: QuoteRequest): Mail {
   return {
     to: q.email,
-    subject: "Votre demande de yoga en entreprise",
+    subject: q.kind === "particulier" ? "Votre demande de cours particulier" : "Votre demande de yoga en entreprise",
     html: layout(
       `Merci ${e(q.name.split(" ")[0])} !`,
-      p(`J'ai bien reçu votre demande pour <b>${e(q.company)}</b> et je reviens vers vous très rapidement pour imaginer ensemble vos séances de yoga.`) +
+      p(q.kind === "particulier"
+        ? "J'ai bien reçu votre demande de cours particulier et je reviens vers vous très rapidement pour organiser une première séance."
+        : `J'ai bien reçu votre demande pour <b>${e(q.company)}</b> et je reviens vers vous très rapidement pour organiser un premier échange.`) +
         p("À très vite,<br>Laure<br>06 64 79 11 85"),
     ),
   };

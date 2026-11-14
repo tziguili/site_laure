@@ -28,5 +28,5 @@
     await new Promise((r) => setTimeout(r, 1500));
   }
   title.textContent = "Paiement reçu";
-  text.textContent = "La confirmation prend un peu plus de temps que prévu. Vous allez la recevoir par email ; en cas de doute, écrivez à laureyogaclub@gmail.com.";
+  text.textContent = "La confirmation prend un peu plus de temps que prévu. Vous allez la recevoir par email ; en cas de doute, écrivez à contact@laureyogaclub.fr.";
 })();

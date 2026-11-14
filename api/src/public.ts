@@ -5,7 +5,16 @@ import { createCheckoutSession } from "./stripe";
 import { quoteAckEmail, quoteRequestEmail, sendEmail } from "./email";
 import { HttpError, cleanEmail, cleanInt, cleanText, json, nowIso, readJson } from "./util";
 
-const PAYMENTS: Payment[] = ["online", "on_site", "card"];
+// Site public : paiement en ligne uniquement (ou carte 3 cours déjà achetée). « Sur place » reste possible via l'admin.
+const PAYMENTS: Payment[] = ["online", "card"];
+
+/** « Paris 12 » à partir de l'adresse (code postal 750XX), sinon la ville. Sert au filtre par lieu. */
+export function areaOf(location: string): string {
+  const m = location.match(/\b750(\d{2})\b/);
+  if (m) return `Paris ${Number(m[1])}`;
+  const city = location.split(",").pop()?.replace(/\d{5}/, "").trim();
+  return city || "Paris";
+}
 
 /** Retours Stripe vers l'aperçu local quand la réservation vient de localhost (origine autorisée), sinon vers le site public. */
 function siteBase(req: Request, env: Env): string {
@@ -14,10 +23,15 @@ function siteBase(req: Request, env: Env): string {
   return /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin) && allowed.includes(origin) ? origin : env.SITE_URL;
 }
 
-/** GET /api/classes — cours à venir (8 semaines) avec places restantes. */
-export async function listClasses(env: Env): Promise<Response> {
+/** GET /api/classes?from=&to= — cours à venir avec places restantes (par défaut : 4 mois ; fenêtre max 100 jours). */
+export async function listClasses(url: URL, env: Env): Promise<Response> {
   const now = nowIso();
-  const until = new Date(Date.now() + 56 * 86_400_000).toISOString();
+  const fromParam = url.searchParams.get("from");
+  const toParam = url.searchParams.get("to");
+  const from = fromParam && !Number.isNaN(Date.parse(fromParam)) ? new Date(Math.max(Date.parse(fromParam), Date.now())).toISOString() : now;
+  const maxSpan = (toParam ? 100 : 122) * 86_400_000;
+  const toWanted = toParam && !Number.isNaN(Date.parse(toParam)) ? Date.parse(toParam) : Date.parse(from) + maxSpan;
+  const until = new Date(Math.min(toWanted, Date.parse(from) + maxSpan)).toISOString();
   const { results } = await env.DB.prepare(
     `SELECT c.id, c.starts_at, c.duration_min, c.title, c.location, c.capacity,
             (SELECT COUNT(*) FROM bookings b WHERE b.class_id = c.id AND ${ACTIVE_BOOKING.replace(/status|expires_at/g, "b.$&")}) AS taken
@@ -25,7 +39,7 @@ export async function listClasses(env: Env): Promise<Response> {
      WHERE c.cancelled = 0 AND c.starts_at > ? AND c.starts_at < ?
      ORDER BY c.starts_at`,
   )
-    .bind(now, now, until)
+    .bind(now, from, until)
     .all<{ id: number; starts_at: string; duration_min: number; title: string; location: string; capacity: number; taken: number }>();
 
   const cfg = config(env);
@@ -38,7 +52,7 @@ export async function listClasses(env: Env): Promise<Response> {
       card_credits: cfg.cardCredits,
     },
     cancel_hours: cfg.cancelHours,
-    classes: results.map(({ taken, capacity, ...c }) => ({ ...c, places_left: Math.max(0, capacity - taken) })),
+    classes: results.map(({ taken, capacity, ...c }) => ({ ...c, area: areaOf(c.location), places_left: Math.max(0, capacity - taken) })),
   });
 }
 
@@ -144,22 +158,24 @@ export async function postCancel(env: Env, token: string): Promise<Response> {
   return json({ ok: true, note });
 }
 
-/** POST /api/contact — demande de devis entreprise. */
+/** POST /api/contact — demande de cours particulier ou de devis entreprise ({ kind: "particulier" | "entreprise", … }). */
 export async function postContact(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const body = await readJson(req);
   if (body.website) return json({ ok: true }); // champ piège : on fait comme si tout allait bien
+  const kind: "particulier" | "entreprise" = body.kind === "particulier" ? "particulier" : "entreprise";
   const q = {
+    kind,
     name: cleanText(body.name, "nom"),
-    company: cleanText(body.company, "entreprise", 120),
+    company: cleanText(body.company, "entreprise", 120, kind === "entreprise"),
     email: cleanEmail(body.email),
     phone: cleanText(body.phone, "téléphone", 30, false),
     participants: cleanText(body.participants, "participants", 40, false),
     place: cleanText(body.place, "lieu", 60, false),
     message: String(body.message ?? "").trim().slice(0, 3000),
   };
-  if (!env.ADMIN_EMAIL) throw new HttpError(500, "Formulaire indisponible, écrivez à laureyogaclub@gmail.com.");
+  if (!env.ADMIN_EMAIL) throw new HttpError(500, "Formulaire indisponible, écrivez à contact@laureyogaclub.fr.");
   if (!(await sendEmail(env, quoteRequestEmail(env, q))))
-    throw new HttpError(502, "L'envoi a échoué. Réessayez, ou écrivez directement à laureyogaclub@gmail.com.");
+    throw new HttpError(502, "L'envoi a échoué. Réessayez, ou écrivez directement à contact@laureyogaclub.fr.");
   ctx.waitUntil(sendEmail(env, quoteAckEmail(q)));
   return json({ ok: true }, 201);
 }

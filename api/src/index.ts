@@ -25,7 +25,7 @@ async function route(req: Request, env: Env, ctx: ExecutionContext): Promise<Res
   let p: RegExpMatchArray | null;
 
   // --- Public ---
-  if (m === "GET" && path === "/api/classes") return pub.listClasses(env);
+  if (m === "GET" && path === "/api/classes") return pub.listClasses(url, env);
   if (m === "POST" && path === "/api/bookings") return pub.postBooking(req, env, ctx);
   if (m === "POST" && path === "/api/cards") return pub.postCard(req, env);
   if (m === "POST" && path === "/api/contact") return pub.postContact(req, env, ctx);

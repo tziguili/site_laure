@@ -856,3 +856,144 @@ td .inline-form input[type="number"] { flex: 0 0 4.2rem; }
 
 /* Transition douce des couleurs (en-tête / pied de page) */
 .site-header .logo, .nav a, .site-header .btn, .site-footer { transition: color 0.4s, background-color 0.4s, border-color 0.4s; }
+
+/* ============================================================
+   Retours cliente (nov. 2026)
+   ============================================================ */
+/* Titres : une seule police, sans mot en italique */
+h1 em, h2 em { font-style: inherit; font-weight: inherit; color: inherit; font-family: inherit; }
+
+/* Accueil : hero épuré */
+.hero--simple .wrap { align-items: center; }
+.hero--simple h1 { font-size: clamp(2.3rem, 5vw, 3.8rem); line-height: 1.15; }
+
+/* Les 3 types de cours (cartes cliquables) */
+.trio-link { display: flex; flex-direction: column; gap: 0.6rem; text-decoration: none; transition: transform 0.25s, background 0.25s, box-shadow 0.25s; }
+.trio-link:hover { color: var(--white); transform: translateY(-4px); background: rgba(54, 58, 92, 0.94); box-shadow: 0 22px 44px -28px rgba(30, 32, 60, 0.8); }
+.trio-link p { color: #e9e8f2; margin: 0; }
+.trio-more { margin-top: auto; padding-top: 0.6rem; font-weight: 500; text-decoration: underline; text-underline-offset: 0.25em; }
+.arrow-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.arrow-list li { display: flex; gap: 0.6rem; align-items: center; color: #e9e8f2; }
+.arrow-ico { flex: none; width: 1.15rem; height: 1.15rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.small-note { font-size: 0.92rem; color: var(--muted); margin-top: 1rem; }
+
+/* Réserver */
+.jump-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem 1.4rem; margin-top: 1.6rem; font-size: 0.95rem; }
+.booking > .wrap > h2 { margin-bottom: 1.6rem; }
+.selected-address { margin: -0.4rem 0 1.2rem; color: var(--muted); font-size: 0.95rem; }
+.card-buy {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+  margin-top: 2.5rem;
+  padding: 2rem;
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, var(--ink) 7%, transparent);
+  scroll-margin-top: 100px;
+}
+.card-buy h3 { font-size: 1.6rem; }
+@media (max-width: 880px) { .card-buy { grid-template-columns: minmax(0, 1fr); } }
+#demande, #collectifs, #devis { scroll-margin-top: 80px; }
+.segmented { display: grid !important; grid-template-columns: 1fr 1fr; gap: 0.5rem !important; }
+.segmented legend { grid-column: 1 / -1; }
+.segmented label { display: block; cursor: pointer; }
+.segmented input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.segmented span { display: block; text-align: center; padding: 0.7rem 0.6rem; border: 1px solid var(--sand-deep); border-radius: 12px; font-size: 0.95rem; }
+.segmented input:checked + span { background: var(--ink); border-color: var(--ink); color: var(--white); }
+.segmented input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* Calendrier mensuel */
+.cal { background: var(--white); border-radius: var(--radius); padding: 1.4rem; border: 1px solid color-mix(in srgb, var(--ink) 7%, transparent); }
+.cal-bar { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1rem; }
+.cal-title { margin: 0; text-align: center; font-size: 1.5rem; }
+.cal-title::first-letter { text-transform: uppercase; }
+.cal-nav {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--sand-deep); background: var(--cream); color: var(--ink);
+  display: grid; place-items: center; cursor: pointer; transition: background 0.2s, opacity 0.2s;
+}
+.cal-nav svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.cal-nav:hover:not(:disabled) { background: var(--sand); }
+.cal-nav:disabled { opacity: 0.3; cursor: default; }
+.cal-areas { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin: 1rem 0 1.2rem; min-height: 2.2rem; }
+.cal-area {
+  font: inherit; font-size: 0.9rem; padding: 0.4rem 1rem; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--ink); background: transparent; color: var(--ink);
+}
+.cal-area::before { content: "📍 "; }
+.cal-area.is-on { background: var(--ink); color: var(--white); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.cal-dow { text-align: center; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 0.3rem 0; }
+.cal-day {
+  min-height: 92px; padding: 0.4rem; border-radius: 10px; background: var(--cream);
+  display: flex; flex-direction: column; gap: 4px; min-width: 0;
+}
+.cal-num { font-size: 0.85rem; color: var(--muted); }
+.cal-day.is-outside { background: transparent; }
+.cal-day.is-outside .cal-num, .cal-day.is-past .cal-num { opacity: 0.45; }
+.cal-day.is-today .cal-num { display: inline-grid; place-items: center; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: var(--ink); color: var(--white); opacity: 1; }
+.cal-day.has-class { background: color-mix(in srgb, var(--ink) 6%, var(--cream)); }
+.cal-class {
+  font: inherit; text-align: left; cursor: pointer; border: 0; border-radius: 8px;
+  padding: 0.35rem 0.45rem; background: var(--ink); color: var(--white);
+  display: flex; flex-direction: column; line-height: 1.2; min-width: 0;
+  transition: background 0.2s, transform 0.2s;
+}
+.cal-class b { font-weight: 600; font-size: 0.95rem; }
+.cal-class-info { font-size: 0.75rem; opacity: 0.85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cal-class:hover:not(:disabled) { background: var(--ink-deep); transform: translateY(-1px); }
+.cal-class.is-selected { background: var(--ink-deep); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 35%, transparent); }
+.cal-class.is-full { background: var(--sand-deep); color: var(--muted); cursor: not-allowed; }
+.cal-empty { text-align: center; color: var(--muted); margin: 1.2rem 0 0; }
+.cal.is-loading .cal-grid { opacity: 0.5; }
+.cal-legend { text-align: center; }
+@media (max-width: 600px) {
+  .cal { padding: 0.8rem; }
+  .cal-grid { gap: 2px; }
+  .cal-day { min-height: 64px; padding: 0.25rem; }
+  .cal-dow { font-size: 0.65rem; letter-spacing: 0; }
+  .cal-class { padding: 0.25rem; align-items: center; }
+  .cal-class b { font-size: 0.78rem; }
+  .cal-class-info { display: none; }
+  .cal-title { font-size: 1.2rem; }
+}
+
+/* Planning : lieux + carte */
+.where { align-items: stretch; }
+.area-card { background: var(--white); border-radius: var(--radius); padding: 1.6rem; border: 1px solid color-mix(in srgb, var(--ink) 7%, transparent); }
+.area-card h3 { margin: 0.6rem 0 0.3rem; }
+.area-badge { display: inline-block; padding: 0.3rem 0.9rem; border-radius: 999px; background: var(--ink); color: var(--white); font-weight: 600; font-size: 0.95rem; }
+.map { border-radius: var(--radius); overflow: hidden; min-height: 340px; border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent); }
+.map iframe { width: 100%; height: 100%; min-height: 340px; border: 0; display: block; }
+
+/* Tarifs : formules sur mesure */
+.prices-title { text-align: center; margin-bottom: 2rem; }
+.offer--big { padding: 2.4rem; }
+.offer--big h3 { font-size: 2rem; margin-bottom: 0.2rem; }
+.offer-price { font-family: var(--font-title); font-variation-settings: "SOFT" 100; font-size: 1.25rem; color: var(--ink-soft); margin-bottom: 0.8rem; }
+.offer--brown { --ink: #4b3d34; --ink-deep: #3a2e27; --ink-soft: #7a6352; background: #f2ede7; }
+.offer--brown h3 { color: #4b3d34; }
+
+/* Pages légales */
+.page-hero--legal { padding-bottom: 1rem; }
+.section--legal { padding-top: 1rem; }
+.legal { max-width: 780px; }
+.legal h2 { font-size: 1.5rem; margin-top: 2.2rem; }
+.legal ul { padding-left: 1.2rem; }
+.legal li { margin-bottom: 0.4rem; }
+.legal-date { color: var(--muted); font-size: 0.95rem; }
+/* Contenu à compléter (bien visible tant qu'il reste) */
+.todo { background: #fff3cd; color: #6a4b00; padding: 0.05em 0.35em; border-radius: 4px; border: 1px dashed #d4a72c; }
+
+/* Pied de page : liens légaux */
+.footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.6rem 1.5rem; }
+.legal-links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; }
+.legal-links a { color: rgba(235, 224, 205, 0.75) !important; }
+.legal-links a:hover { color: var(--white) !important; }
+
+/* Accueil : un mot par ligne, sans point en bout de ligne */
+.h1-stack span { display: block; }
+.h1-stack .sep { display: none; }
