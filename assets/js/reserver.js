@@ -21,7 +21,10 @@
     const chosen = online ? boxes.find((b) => b.checked) : null;
     referralField.hidden = !(chosen && chosen.value === "referral");
     form.referral_name.required = !referralField.hidden;
-    if (prices) $("#price-online").textContent = chosen ? `${fmt.euros(prices.discovery)} au lieu de ${fmt.euros(prices.online)}` : fmt.euros(prices.online);
+    if (prices)
+      $("#price-online").innerHTML = chosen
+        ? `<s>${esc(fmt.euros(prices.online))}</s> <b class="price-now">${esc(fmt.euros(prices.discovery))}</b> · tarif ${chosen.value === "referral" ? "parrainage" : "découverte"}`
+        : esc(fmt.euros(prices.online));
   }
   form.addEventListener("change", syncDiscount);
   if (params.get("premier")) form.querySelector('input[name="discount"][value="first"]').checked = true;

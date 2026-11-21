@@ -1106,3 +1106,5 @@ h3 { font-size: 1.3rem; }
 .certifs li b { color: var(--ink); font-weight: 600; }
 .grid-2-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; max-width: 780px; margin-inline: auto; }
 @media (max-width: 680px) { .grid-2-cards { grid-template-columns: minmax(0, 1fr); } }
+#price-online s { opacity: 0.7; }
+#price-online .price-now { font-weight: 600; color: var(--ink); }
