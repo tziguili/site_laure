@@ -1061,7 +1061,7 @@ h3 { font-size: 1.3rem; }
 .courses .trio-link.trio--brown:hover { background: #3a2e27; }
 
 /* Avis : lien Google */
-.reviews-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem 1.6rem; margin-top: 2.2rem; }
+.reviews-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.8rem 1.6rem; margin-top: 2.2rem; }
 .reviews-links a { color: var(--white); }
 .reviews-links .btn { background: transparent; border-color: rgba(255, 253, 249, 0.75); color: var(--white); }
 .reviews-links .btn:hover { background: rgba(255, 253, 249, 0.15); border-color: var(--white); }
