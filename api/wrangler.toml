@@ -25,9 +25,16 @@ EMAIL_FROM = "Laure Yoga Club <reservations@laureyogaclub.fr>"
 EMAIL_REPLY_TO = "contact@laureyogaclub.fr"
 ADMIN_EMAIL = "laureyogaclub@gmail.com"   # reçoit une notification à chaque réservation
 
+# Demande d'avis Google envoyée le lendemain du premier cours (une fois par personne). Vide = désactivé.
+GOOGLE_REVIEW_URL = "https://g.page/r/CQoILeT3bw54EBM/review"
+
 # Secrets (à NE PAS mettre ici) — `wrangler secret put <NOM>` en production,
 # fichier api/.dev.vars en local :
 #   STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, ADMIN_PASSWORD, RESEND_API_KEY
+
+# Tâche quotidienne : 9 h UTC = 10 h (hiver) / 11 h (été) à Paris
+[triggers]
+crons = ["0 9 * * *"]
 
 [[d1_databases]]
 binding = "DB"

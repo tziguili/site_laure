@@ -188,3 +188,21 @@ export function quoteAckEmail(q: QuoteRequest): Mail {
     ),
   };
 }
+
+/** Le lendemain du cours (une seule fois par personne) : demande d'avis Google. */
+export function reviewRequestEmail(env: Env, r: { name: string; email: string; starts_at: string }): Mail {
+  const day = new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", weekday: "long" }).format(new Date(r.starts_at));
+  return {
+    to: r.email,
+    subject: "Merci pour le cours ! Un petit avis ?",
+    html: layout(
+      `Merci ${e(r.name.split(" ")[0])} !`,
+      p(`J'espère que vous avez apprécié le cours de ${e(day)} et que vous en ressentez encore les bienfaits.`) +
+        p("Laure Yoga Club est tout jeune : si le cours vous a plu, un avis sur Google m'aiderait énormément à faire connaître les cours. Cela prend une minute.") +
+        btn(env.GOOGLE_REVIEW_URL!, "Laisser un avis sur Google") +
+        p("Une remarque, une idée pour les prochains cours ? Répondez simplement à cet email, je le lirai avec attention.") +
+        p(`À très vite sur le tapis,<br>Laure`) +
+        `<p style="margin:18px 0 0;font-size:12px;color:#6b6878">Vous ne recevrez ce message qu'une seule fois.</p>`,
+    ),
+  };
+}

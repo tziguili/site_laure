@@ -3,6 +3,7 @@ import * as admin from "./admin";
 import type { Env } from "./env";
 import * as pub from "./public";
 import { HttpError, json } from "./util";
+import { sendReviewRequests } from "./reviews";
 import { stripeWebhook } from "./webhook";
 
 function corsHeaders(req: Request, env: Env): Record<string, string> {
@@ -72,5 +73,10 @@ export default {
     }
     for (const [k, v] of Object.entries(cors)) res.headers.set(k, v);
     return res;
+  },
+
+  /** Tâche quotidienne (cron, wrangler.toml) : demandes d'avis Google le lendemain des cours. */
+  async scheduled(_event: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(sendReviewRequests(env).then(() => undefined));
   },
 } satisfies ExportedHandler<Env>;

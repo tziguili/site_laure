@@ -16,6 +16,8 @@ export interface Env {
   EMAIL_FROM: string;
   EMAIL_REPLY_TO: string;
   ADMIN_EMAIL: string;
+  /** Lien « Écrire un avis » de la fiche Google ; vide = pas de demande d'avis. */
+  GOOGLE_REVIEW_URL?: string;
 
   // secrets
   STRIPE_SECRET_KEY: string;
