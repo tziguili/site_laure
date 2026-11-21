@@ -57,7 +57,7 @@ export async function listClasses(url: URL, env: Env): Promise<Response> {
   });
 }
 
-/** POST /api/bookings — { class_id, name, email, phone?, payment, discount?: "first" | "referral", referral_name? } */
+/** POST /api/bookings — { class_id, name, email, phone?, payment, discount?: "first" | "referral", referral_email? } */
 export async function postBooking(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const body = await readJson(req);
   if (body.website) throw new HttpError(400, "Requête invalide."); // champ piège anti-robots
@@ -71,7 +71,7 @@ export async function postBooking(req: Request, env: Env, ctx: ExecutionContext)
     phone: cleanText(body.phone, "téléphone", 30, false),
     payment,
     discount,
-    referralName: discount === "referral" ? cleanText(body.referral_name, "nom de la personne parrainée", 120) : "",
+    referralEmail: discount === "referral" && body.referral_email ? cleanEmail(body.referral_email) : "",
     siteUrl: siteBase(req, env),
   });
   return json(result, 201);

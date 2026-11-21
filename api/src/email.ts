@@ -82,6 +82,9 @@ export function bookingConfirmedEmail(env: Env, b: BookingInfo, cancelHours: num
       p(`Votre place est réservée pour le <b>${e(b.title)}</b> du <b>${formatClassDate(b.starts_at)}</b>.`) +
         p(`📍 ${e(b.location)}<br>Pensez à arriver 5 minutes avant le début du cours. Les tapis sont fournis.`) +
         p(paymentLine(b)) +
+        (b.discount === "first"
+          ? p(`Vous venez avec la personne qui vous a fait découvrir les cours ? Elle peut maintenant réserver sa place au <b>tarif parrainage</b> pour ce même cours, en indiquant votre adresse email : <b>${e(b.email)}</b>.`)
+          : "") +
         p(`Un empêchement ? Vous pouvez annuler jusqu'à ${cancelHours} h avant le cours :`) +
         btn(`${env.SITE_URL}/annulation.html?t=${encodeURIComponent(b.token)}`, "Gérer ma réservation") +
         p(`À très vite sur le tapis,<br>Laure`),

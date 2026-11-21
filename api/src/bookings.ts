@@ -44,6 +44,7 @@ export interface BookingRow {
   cancelled_at: string | null;
   discount: Discount | null;
   referral_name: string | null;
+  referral_email: string | null;
 }
 
 /** Une réservation occupe une place si elle est confirmée, ou en attente de paiement non expirée. */
@@ -81,6 +82,39 @@ export async function bookingInfo(db: D1Database, bookingId: number): Promise<(B
     .first();
 }
 
+/**
+ * Tarif parrainage : la personne parrainée doit avoir réservé ET payé ce même cours,
+ * ce doit être son premier cours, et elle ne peut être parrainée qu'une fois.
+ */
+async function checkReferral(db: D1Database, cls: ClassRow, sponsorEmail: string, friendEmail: string, now: string) {
+  if (!friendEmail) throw new HttpError(400, "Indiquez l'adresse email de la personne que vous parrainez.");
+  if (friendEmail === sponsorEmail) throw new HttpError(400, "Indiquez l'adresse email de la personne parrainée, pas la vôtre.");
+  const friend = await db
+    .prepare("SELECT name FROM bookings WHERE class_id = ? AND email = ? AND status = 'confirmed' LIMIT 1")
+    .bind(cls.id, friendEmail)
+    .first<{ name: string }>();
+  if (!friend)
+    throw new HttpError(
+      409,
+      "Pour le tarif parrainage, la personne que vous parrainez doit d'abord réserver et régler sa place pour ce même cours (en cochant « C'est mon premier cours »). Réservez ensuite la vôtre avec son adresse email.",
+    );
+  const before = await db
+    .prepare(
+      `SELECT COUNT(*) AS n FROM bookings b JOIN classes c ON c.id = b.class_id
+       WHERE b.email = ? AND b.status = 'confirmed' AND c.starts_at < ?`,
+    )
+    .bind(friendEmail, cls.starts_at)
+    .first<{ n: number }>();
+  if ((before?.n ?? 0) > 0)
+    throw new HttpError(409, "Le tarif parrainage s'applique lorsque la personne parrainée vient pour la première fois : elle a déjà suivi un cours.");
+  const used = await db
+    .prepare(`SELECT id FROM bookings WHERE referral_email = ? AND discount = 'referral' AND ${ACTIVE_BOOKING} LIMIT 1`)
+    .bind(friendEmail, now)
+    .first();
+  if (used) throw new HttpError(409, "Cette personne a déjà été parrainée.");
+  return { name: friend.name, email: friendEmail };
+}
+
 export interface NewBooking {
   classId: number;
   name: string;
@@ -89,8 +123,8 @@ export interface NewBooking {
   payment: Payment;
   /** Paiement en ligne : tarif découverte coché par le client (sinon plein tarif). */
   discount?: Discount | null;
-  /** Nom de la personne parrainée (obligatoire si discount = "referral"). */
-  referralName?: string;
+  /** Email de la personne parrainée (obligatoire si discount = "referral"). */
+  referralEmail?: string;
   /** Ajout manuel par Laure : ignore la limite de places et le délai. */
   byAdmin?: boolean;
   /** Adresse du site pour les retours Stripe (par défaut SITE_URL). */
@@ -129,8 +163,7 @@ export async function createBooking(env: Env, ctx: ExecutionContext, input: NewB
       409,
       "Le tarif découverte s'applique au premier cours : un cours a déjà été réservé avec cette adresse email. Décochez « C'est mon premier cours » pour continuer.",
     );
-  if (discount === "referral" && !input.referralName)
-    throw new HttpError(400, "Indiquez le prénom et le nom de la personne que vous parrainez.");
+  const referral = discount === "referral" ? await checkReferral(db, cls, input.email, input.referralEmail ?? "", now) : null;
   if (input.payment === "online") amount = discount ? cfg.priceDiscovery : cfg.priceOnline;
   else if (input.payment === "on_site") amount = (await isFirstClass(db, input.email)) ? cfg.priceDiscovery : cfg.priceOnSite;
 
@@ -162,12 +195,12 @@ export async function createBooking(env: Env, ctx: ExecutionContext, input: NewB
     : `(SELECT capacity FROM classes WHERE id = ?1) > (SELECT COUNT(*) FROM bookings WHERE class_id = ?1 AND ${ACTIVE_BOOKING.replace("?", "?12")})`;
   const inserted = await db
     .prepare(
-      `INSERT INTO bookings (class_id, name, email, phone, payment, amount_cents, status, paid, card_id, token, expires_at, created_at, discount, referral_name)
-       SELECT ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14
+      `INSERT INTO bookings (class_id, name, email, phone, payment, amount_cents, status, paid, card_id, token, expires_at, created_at, discount, referral_name, referral_email)
+       SELECT ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15
        WHERE ${capacityGuard}
        RETURNING id`,
     )
-    .bind(cls.id, input.name, input.email, input.phone || null, input.payment, amount, status, input.payment === "card" ? 1 : 0, cardId, token, expiresAt, now, discount, discount === "referral" ? input.referralName : null)
+    .bind(cls.id, input.name, input.email, input.phone || null, input.payment, amount, status, input.payment === "card" ? 1 : 0, cardId, token, expiresAt, now, discount, referral?.name ?? null, referral?.email ?? null)
     .first<{ id: number }>();
 
   if (!inserted) {

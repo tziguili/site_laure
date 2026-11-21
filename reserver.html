@@ -20,8 +20,8 @@
   <link rel="icon" href="assets/img/lune.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/fraunces-normal-latin-c8e588.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/lora-normal-latin-ecda3b.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/fonts.css?v=20261121">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261121">
+  <link rel="stylesheet" href="assets/css/fonts.css?v=20261121b">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261121b">
   <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
@@ -86,8 +86,8 @@
           <fieldset class="discount" id="discount">
             <legend>Tarif découverte et parrainage (<span data-discovery-price>14 €</span>)</legend>
             <label class="check"><input type="checkbox" name="discount" value="first"><span>C'est mon premier cours<small>Pour votre tout premier cours collectif avec Laure.</small></span></label>
-            <label class="check"><input type="checkbox" name="discount" value="referral"><span>Je parraine un·e ami·e<small>Vous venez avec une personne qui vient pour la première fois.</small></span></label>
-            <label id="referral-field" hidden>Prénom et nom de la personne parrainée<input name="referral_name" maxlength="120" autocomplete="off"></label>
+            <label class="check"><input type="checkbox" name="discount" value="referral"><span>Je parraine un·e ami·e<small>Vous venez avec une personne qui vient pour la première fois et qui a déjà réservé sa place pour ce cours.</small></span></label>
+            <label id="referral-field" hidden><span>Email de la personne parrainée <small>(celui de sa réservation)</small></span><input name="referral_email" type="email" maxlength="200" autocomplete="off"></label>
           </fieldset>
           <button class="btn" type="submit">Confirmer la réservation</button>
         </form>
@@ -172,9 +172,9 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=20261121"></script>
-<script src="assets/js/config.js?v=20261121"></script>
-<script src="assets/js/calendar.js?v=20261121"></script>
-<script src="assets/js/reserver.js?v=20261121"></script>
+<script src="assets/js/main.js?v=20261121b"></script>
+<script src="assets/js/config.js?v=20261121b"></script>
+<script src="assets/js/calendar.js?v=20261121b"></script>
+<script src="assets/js/reserver.js?v=20261121b"></script>
 </body>
 </html>

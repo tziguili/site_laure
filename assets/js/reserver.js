@@ -20,7 +20,7 @@
     if (e && e.target.name === "discount" && e.target.checked) boxes.forEach((b) => { if (b !== e.target) b.checked = false; });
     const chosen = online ? boxes.find((b) => b.checked) : null;
     referralField.hidden = !(chosen && chosen.value === "referral");
-    form.referral_name.required = !referralField.hidden;
+    form.referral_email.required = !referralField.hidden;
     if (prices)
       $("#price-online").innerHTML = chosen
         ? `<s>${esc(fmt.euros(prices.online))}</s> <b class="price-now">${esc(fmt.euros(prices.discovery))}</b> · tarif ${chosen.value === "referral" ? "parrainage" : "découverte"}`
@@ -87,7 +87,7 @@
           phone: fd.get("phone"),
           payment: fd.get("payment"),
           discount: fd.get("payment") === "online" ? fd.get("discount") || undefined : undefined,
-          referral_name: fd.get("referral_name") || undefined,
+          referral_email: fd.get("referral_email") || undefined,
           website: fd.get("website"),
         },
       });
