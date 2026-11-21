@@ -12,6 +12,8 @@ import { createCheckoutSession, expireCheckoutSession, refund } from "./stripe";
 import { HttpError, addMinutes, euros, formatClassDate, nowIso, randomToken } from "./util";
 
 export type Payment = "online" | "on_site" | "card";
+/** Tarif découverte demandé en ligne : premier cours, ou parrainage d'une personne qui vient pour la première fois. */
+export type Discount = "first" | "referral";
 
 export interface ClassRow {
   id: number;
@@ -40,6 +42,8 @@ export interface BookingRow {
   expires_at: string | null;
   created_at: string;
   cancelled_at: string | null;
+  discount: Discount | null;
+  referral_name: string | null;
 }
 
 /** Une réservation occupe une place si elle est confirmée, ou en attente de paiement non expirée. */
@@ -83,6 +87,10 @@ export interface NewBooking {
   email: string;
   phone: string;
   payment: Payment;
+  /** Paiement en ligne : tarif découverte coché par le client (sinon plein tarif). */
+  discount?: Discount | null;
+  /** Nom de la personne parrainée (obligatoire si discount = "referral"). */
+  referralName?: string;
   /** Ajout manuel par Laure : ignore la limite de places et le délai. */
   byAdmin?: boolean;
   /** Adresse du site pour les retours Stripe (par défaut SITE_URL). */
@@ -114,8 +122,16 @@ export async function createBooking(env: Env, ctx: ExecutionContext, input: NewB
 
   // Montant dû
   let amount = 0;
-  // Tarif découverte (premier cours pour cet email) appliqué aussi en ligne.
-  if (input.payment === "online") amount = (await isFirstClass(db, input.email)) ? cfg.priceDiscovery : cfg.priceOnline;
+  // En ligne : plein tarif, sauf si le client coche « premier cours » (vérifié) ou « je parraine » (déclaratif).
+  const discount = input.payment === "online" ? input.discount ?? null : null;
+  if (discount === "first" && !(await isFirstClass(db, input.email)))
+    throw new HttpError(
+      409,
+      "Le tarif découverte s'applique au premier cours : un cours a déjà été réservé avec cette adresse email. Décochez « C'est mon premier cours » pour continuer.",
+    );
+  if (discount === "referral" && !input.referralName)
+    throw new HttpError(400, "Indiquez le prénom et le nom de la personne que vous parrainez.");
+  if (input.payment === "online") amount = discount ? cfg.priceDiscovery : cfg.priceOnline;
   else if (input.payment === "on_site") amount = (await isFirstClass(db, input.email)) ? cfg.priceDiscovery : cfg.priceOnSite;
 
   // Carte : on débite un crédit d'abord (atomique), on le rendra si le cours est complet.
@@ -131,7 +147,7 @@ export async function createBooking(env: Env, ctx: ExecutionContext, input: NewB
       )
       .bind(input.email, new Date(Date.now() - cfg.cardValidityDays * 86_400_000).toISOString())
       .first<{ id: number; credits_left: number }>();
-    if (!card) throw new HttpError(402, "Aucune carte valide avec des cours restants n'est associée à cette adresse email (une carte est valable 1 an).");
+    if (!card) throw new HttpError(402, "Aucune carte valide avec des cours restants n'est associée à cette adresse email (une carte est valable 2 mois).");
     cardId = card.id;
     creditsLeft = card.credits_left;
   }
@@ -146,12 +162,12 @@ export async function createBooking(env: Env, ctx: ExecutionContext, input: NewB
     : `(SELECT capacity FROM classes WHERE id = ?1) > (SELECT COUNT(*) FROM bookings WHERE class_id = ?1 AND ${ACTIVE_BOOKING.replace("?", "?12")})`;
   const inserted = await db
     .prepare(
-      `INSERT INTO bookings (class_id, name, email, phone, payment, amount_cents, status, paid, card_id, token, expires_at, created_at)
-       SELECT ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12
+      `INSERT INTO bookings (class_id, name, email, phone, payment, amount_cents, status, paid, card_id, token, expires_at, created_at, discount, referral_name)
+       SELECT ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14
        WHERE ${capacityGuard}
        RETURNING id`,
     )
-    .bind(cls.id, input.name, input.email, input.phone || null, input.payment, amount, status, input.payment === "card" ? 1 : 0, cardId, token, expiresAt, now)
+    .bind(cls.id, input.name, input.email, input.phone || null, input.payment, amount, status, input.payment === "card" ? 1 : 0, cardId, token, expiresAt, now, discount, discount === "referral" ? input.referralName : null)
     .first<{ id: number }>();
 
   if (!inserted) {

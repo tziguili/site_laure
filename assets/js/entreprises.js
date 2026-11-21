@@ -2,6 +2,10 @@
 (() => {
   const form = document.getElementById("quote-form");
   const msg = document.getElementById("quote-msg");
+  // « Planifier une intervention » : présélectionne le type d'intervention
+  document.querySelectorAll("[data-format]").forEach((a) =>
+    a.addEventListener("click", () => { form.format.value = a.dataset.format; }),
+  );
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!form.reportValidity()) return;

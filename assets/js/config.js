@@ -31,6 +31,8 @@ window.fmt = {
   dayNum: (iso) => new Intl.DateTimeFormat("fr-FR", { ...tz, day: "numeric" }).format(new Date(iso)),
   month: (iso) => new Intl.DateTimeFormat("fr-FR", { ...tz, month: "short" }).format(new Date(iso)).replace(".", ""),
   time: (iso) => new Intl.DateTimeFormat("fr-FR", { ...tz, hour: "numeric", minute: "2-digit" }).format(new Date(iso)).replace(":00", "h").replace(":", "h"),
+  /** « 11h – 12h » : heure de début et de fin d'un cours */
+  range: (iso, durationMin = 60) => `${fmt.time(iso)} – ${fmt.time(new Date(new Date(iso).getTime() + durationMin * 60000).toISOString())}`,
   euros: (cents) => (cents / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: cents % 100 ? 2 : 0 }),
 };
 

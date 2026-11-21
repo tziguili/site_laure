@@ -59,10 +59,15 @@ export interface BookingInfo {
   title: string;
   location: string;
   credits_left?: number | null;
+  discount?: string | null;
+  referral_name?: string | null;
 }
 
+const discountNote = (b: BookingInfo) =>
+  b.discount === "first" ? " (tarif découverte, premier cours)" : b.discount === "referral" ? ` (tarif parrainage : ${e(b.referral_name ?? "")})` : "";
+
 const paymentLine = (b: BookingInfo) => {
-  if (b.payment === "online") return `Payé en ligne : <b>${euros(b.amount_cents)}</b>.`;
+  if (b.payment === "online") return `Payé en ligne : <b>${euros(b.amount_cents)}</b>${discountNote(b)}.`;
   if (b.payment === "card")
     return `Réglé avec votre carte${b.credits_left != null ? ` (il vous reste <b>${b.credits_left}</b> cours)` : ""}.`;
   return `À régler sur place (carte bancaire ou espèces) : <b>${euros(b.amount_cents)}</b>.`;
@@ -126,7 +131,7 @@ export function cardActivatedEmail(env: Env, c: { name: string; email: string; c
 }
 
 export function adminNotificationEmail(env: Env, b: BookingInfo, placesLeft: number): Mail {
-  const how = b.payment === "online" ? "payé en ligne" : b.payment === "card" ? "carte" : `sur place (${euros(b.amount_cents)})`;
+  const how = b.payment === "online" ? `payé en ligne, ${euros(b.amount_cents)}${discountNote(b)}` : b.payment === "card" ? "carte" : `sur place (${euros(b.amount_cents)})`;
   return {
     to: env.ADMIN_EMAIL,
     subject: `Nouvelle réservation : ${b.name} — ${formatClassDate(b.starts_at)}`,
@@ -147,6 +152,7 @@ export interface QuoteRequest {
   phone: string;
   participants: string;
   place: string;
+  format: string;
   message: string;
 }
 
@@ -162,7 +168,7 @@ export function quoteRequestEmail(env: Env, q: QuoteRequest): Mail {
       q.kind === "particulier" ? "Nouvelle demande de cours particulier" : "Nouvelle demande de devis",
       `<table style="border-collapse:collapse;margin:0 0 16px;font-size:15px">
         ${row("Entreprise", q.company)}${row("Contact", q.name)}${row("Email", q.email)}${row("Téléphone", q.phone)}
-        ${row("Participants", q.participants)}${row("Lieu souhaité", q.place)}
+        ${row("Intervention", q.format)}${row("Participants", q.participants)}${row("Lieu souhaité", q.place)}
       </table>` + (q.message ? p(e(q.message).replace(/\n/g, "<br>")) : "") + p("Répondez simplement à cet email pour écrire directement à cette personne."),
     ),
   };

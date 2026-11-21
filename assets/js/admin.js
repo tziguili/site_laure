@@ -52,7 +52,8 @@
 
   // ---------- Planning ----------
   const payLabel = (b) =>
-    b.payment === "online" ? `En ligne · ${fmt.euros(b.amount_cents)}` : b.payment === "card" ? "Carte" : `Sur place · ${fmt.euros(b.amount_cents)}`;
+    (b.payment === "online" ? `En ligne · ${fmt.euros(b.amount_cents)}` : b.payment === "card" ? "Carte" : `Sur place · ${fmt.euros(b.amount_cents)}`) +
+    (b.discount === "first" ? ' <span class="tag">1er cours</span>' : b.discount === "referral" ? ` <span class="tag">parraine ${esc(b.referral_name || "")}</span>` : "");
 
   function classHtml(c) {
     const confirmed = c.bookings.filter((b) => b.status === "confirmed");
@@ -217,6 +218,7 @@
     const box = $("#cards");
     try {
       const r = await call("/admin/cards");
+      const validity = r.validity_days || 60;
       box.innerHTML = r.cards.length
         ? `<div class="table-wrap"><table>
             <tr><th>Nom</th><th>Email</th><th>Restants</th><th>Achat</th></tr>
@@ -226,7 +228,7 @@
                   <td><b>${esc(c.name)}</b></td>
                   <td>${esc(c.email)}</td>
                   <td><form class="inline-form" data-card="${c.id}"><input name="credits_left" type="number" min="0" max="50" value="${c.credits_left}"> / ${c.credits_total} <button class="link-btn" type="submit">ok</button></form></td>
-                  <td>${c.payment === "online" ? "En ligne" : "Sur place"} · ${fmt.euros(c.amount_cents)}<br><small class="muted">achetée le ${new Date(c.created_at).toLocaleDateString("fr-FR")} · ${new Date(c.created_at).getTime() + 365 * 86400000 < Date.now() ? "<b>expirée</b>" : "valable jusqu'au " + new Date(new Date(c.created_at).getTime() + 365 * 86400000).toLocaleDateString("fr-FR")}</small></td>
+                  <td>${c.payment === "online" ? "En ligne" : "Sur place"} · ${fmt.euros(c.amount_cents)}<br><small class="muted">achetée le ${new Date(c.created_at).toLocaleDateString("fr-FR")} · ${new Date(c.created_at).getTime() + validity * 86400000 < Date.now() ? "<b>expirée</b>" : "valable jusqu'au " + new Date(new Date(c.created_at).getTime() + validity * 86400000).toLocaleDateString("fr-FR")}</small></td>
                 </tr>`,
               )
               .join("")}

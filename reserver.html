@@ -80,8 +80,14 @@
           <input name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
           <fieldset>
             <legend>Paiement</legend>
-            <label class="radio"><input type="radio" name="payment" value="online" checked><span><b>Payer en ligne</b><small id="price-online">17 € · 14 € pour un premier cours</small></span></label>
+            <label class="radio"><input type="radio" name="payment" value="online" checked><span><b>Payer en ligne</b><small id="price-online">17 €</small></span></label>
             <label class="radio"><input type="radio" name="payment" value="card"><span><b>J'ai déjà une carte <span data-card-credits>3</span> cours</b><small>1 cours décompté · <a href="#carte">pas encore de carte ?</a></small></span></label>
+          </fieldset>
+          <fieldset class="discount" id="discount">
+            <legend>Tarif découverte et parrainage (<span data-discovery-price>14 €</span>)</legend>
+            <label class="check"><input type="checkbox" name="discount" value="first"><span>C'est mon premier cours<small>Pour votre tout premier cours collectif avec Laure.</small></span></label>
+            <label class="check"><input type="checkbox" name="discount" value="referral"><span>Je parraine un·e ami·e<small>Vous venez avec une personne qui vient pour la première fois.</small></span></label>
+            <label id="referral-field" hidden>Prénom et nom de la personne parrainée<input name="referral_name" maxlength="120" autocomplete="off"></label>
           </fieldset>
           <button class="btn" type="submit">Confirmer la réservation</button>
         </form>
@@ -93,7 +99,7 @@
       <div>
         <span class="eyebrow">Carte <span data-card-credits>3</span> cours</span>
         <h3>Revenir régulièrement, à petit prix</h3>
-        <p>La carte <span data-card-credits>3</span> cours (<b id="card-price">45 €</b>, soit 15 € le cours) s'utilise quand vous voulez pendant 1 an. Une fois achetée, réservez vos cours ci-dessus en choisissant « J'ai déjà une carte » avec la même adresse email.</p>
+        <p>La carte <span data-card-credits>3</span> cours (<b id="card-price">45 €</b>, soit 15 € le cours) s'utilise quand vous voulez pendant <span id="card-validity">2 mois</span>. Une fois achetée, réservez vos cours ci-dessus en choisissant « J'ai déjà une carte » avec la même adresse email.</p>
       </div>
       <form id="card-form" class="form" novalidate>
         <label>Prénom et nom<input name="name" required autocomplete="name" maxlength="120"></label>
@@ -113,10 +119,6 @@
       <span class="eyebrow">Sur demande</span>
       <h2>Cours particuliers et yoga en entreprise</h2>
       <p>Pour un cours particulier (à domicile ou dans un espace loué) ou des séances pour votre équipe, laissez-moi vos coordonnées : je vous recontacte rapidement pour organiser un premier échange.</p>
-      <ul class="list-moon">
-        <li>Cours particuliers : tarif sur demande</li>
-        <li>Entreprises : offre personnalisée, sur devis</li>
-      </ul>
       <p class="small-note">Ou directement : <a href="mailto:contact@laureyogaclub.fr">contact@laureyogaclub.fr</a> · <a href="tel:+33664791185">06 64 79 11 85</a></p>
     </div>
     <div>
@@ -147,7 +149,7 @@
     <div class="footer-grid">
       <div>
         <a class="logo" href="index.html" aria-label="Laure Yoga Club — accueil"><b>LAURE</b><span>Yoga Club</span></a>
-        <p>Cours de yoga collectifs et inclusifs à Paris.</p>
+        <p>Cours de yoga inclusifs à Paris.</p>
       </div>
       <div>
         <h4>Contact</h4>

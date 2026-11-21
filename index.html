@@ -88,14 +88,14 @@
           },
           {
             "@type": "Offer",
-            "name": "Premier cours collectif (tarif découverte)",
+            "name": "Tarif découverte et parrainage (premier cours collectif)",
             "price": "14",
             "priceCurrency": "EUR",
             "url": "https://laureyogaclub.fr/reserver.html"
           },
           {
             "@type": "Offer",
-            "name": "Carte 3 cours collectifs (valable 1 an)",
+            "name": "Carte 3 cours collectifs (valable 2 mois)",
             "price": "45",
             "priceCurrency": "EUR",
             "url": "https://laureyogaclub.fr/reserver.html#carte"
@@ -153,25 +153,30 @@
 
 <main>
 
-  <!-- Accueil -->
-  <section class="hero hero--simple">
+  <!-- Accueil : en-tête + prochain cours collectif (fond photo) -->
+  <section class="home-hero trio">
     <div class="wrap">
-      <div>
-        <span class="eyebrow">Yoga · Paris</span>
-        <h1 class="h1-stack"><span>Énergie</span><span class="sep" aria-hidden="true"> · </span><span>Mobilité</span><span class="sep" aria-hidden="true"> · </span><span>Relaxation</span></h1>
-      </div>
-      <div class="hero-media">
-        <img src="assets/img/posture-1000.webp"
-             srcset="assets/img/posture-1000.webp 1000w, assets/img/posture-2000.webp 2000w"
-             sizes="(max-width: 880px) 100vw, 55vw"
-             width="1000" height="749"
-             alt="Laure dans une posture d'étirement latéral sur son tapis de yoga">
+      <span class="eyebrow">Yoga à Paris</span>
+      <h1>Le yoga à votre rythme, dans un cadre qui vous ressemble.</h1>
+      <p class="lead">Des cours inclusifs, mêlant énergie, mobilité et relaxation.</p>
+
+      <div class="next-class">
+        <div class="next-card" id="next-class">
+          <span class="eyebrow">Prochain cours collectif</span>
+          <div class="next-body">Chargement du planning…</div>
+          <a class="btn" id="next-class-btn" href="planning.html">Voir le planning</a>
+        </div>
+        <div class="first-card">
+          <p class="first-price">Votre premier cours<b>14 €</b></p>
+          <p>Tarif découverte sur votre premier cours collectif, puis 17 € le cours.</p>
+          <a class="btn" id="first-class-btn" href="reserver.html?premier=1#collectifs">Réserver mon premier cours</a>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Les cours : collectifs, particuliers, entreprise -->
-  <section class="section trio">
+  <section class="section courses">
     <div class="wrap">
       <div class="section-head section-head--center reveal">
         <h2>Les cours</h2>
@@ -179,20 +184,17 @@
       <div class="grid-3">
         <a class="trio-item trio-link reveal" href="cours.html">
           <h3>Cours collectifs</h3>
-          <ul class="arrow-list">
-            <li><svg class="arrow-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>Petits groupes (8 personnes max)</li>
-            <li><svg class="arrow-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>À la carte, sans engagement</li>
-          </ul>
+          <p>En petits groupes (8 participant·e·s maximum), dans des espaces équipés et à proximité des transports en commun, des cours adaptés à chacun·e qui invitent à prendre soin de son corps à son rythme.</p>
           <span class="trio-more">Découvrir les cours collectifs →</span>
         </a>
         <a class="trio-item trio-link reveal" href="cours.html#particuliers">
           <h3>Cours particuliers</h3>
-          <p>À domicile ou dans un espace loué, une séance 100 % personnalisée, construite autour de vos besoins.</p>
+          <p>À domicile ou dans un espace loué, des séances 100 % personnalisées, construites autour de vos objectifs, de votre rythme et de vos besoins.</p>
           <span class="trio-more">En savoir plus →</span>
         </a>
-        <a class="trio-item trio-link reveal" href="entreprises.html">
+        <a class="trio-item trio-link trio--brown reveal" href="entreprises.html">
           <h3>Yoga en entreprise</h3>
-          <p>Dans vos locaux ou dans un studio à proximité, à Paris et en petite couronne. Offre personnalisée, tarif sur devis.</p>
+          <p>Dans vos locaux ou dans un studio à proximité, à Paris et en petite couronne, une offre construite sur mesure pour votre équipe.</p>
           <span class="trio-more">Découvrir l'offre →</span>
         </a>
       </div>
@@ -266,6 +268,10 @@ Je recommande vivement :) »</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
         </button>
       </div>
+      <p class="reviews-links reveal">
+        <!-- TODO : remplacer par le lien « Écrire un avis » de la fiche Google Business Profile de Laure -->
+        <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=Laure%20Yoga%20Club%20Paris" target="_blank" rel="noopener">Je souhaite laisser un avis</a>
+      </p>
       <dialog class="review-dialog" id="review-dialog" aria-label="Avis complet">
         <button class="review-close" type="button" aria-label="Fermer">×</button>
         <p class="review-full"></p>
@@ -276,21 +282,24 @@ Je recommande vivement :) »</span>
 
   <!-- À propos -->
   <section class="section">
-    <div class="wrap grid-2">
-      <div class="arch reveal">
-        <img src="assets/img/laure-lumiere-700.webp"
-             srcset="assets/img/laure-lumiere-700.webp 700w, assets/img/laure-lumiere-1080.webp 1080w"
-             sizes="(max-width: 880px) 100vw, 45vw"
-             width="700" height="1244" loading="lazy"
-             alt="Laure assise sur son tapis, dans la lumière du matin">
+    <div class="wrap">
+      <div class="section-head section-head--center reveal">
+        <h2>À propos</h2>
       </div>
-      <div class="reveal">
-        <span class="eyebrow">À propos</span>
-        <h2>Laure, professeure de yoga</h2>
-        <!-- TODO : compléter avec le parcours de Laure (formation, rencontre avec le yoga). -->
-        <p>Professeure certifiée de yoga, j'ai à cœur de créer des moments chaleureux, dans un cadre sécurisant, afin que chacun·e se sente bien.</p>
-        <p>Au programme : mobilité, renforcement, souplesse, équilibre… et toujours un vrai moment de relaxation pour finir.</p>
-        <a class="btn btn--ghost" href="a-propos.html">En savoir plus</a>
+      <div class="grid-2">
+        <div class="arch reveal">
+          <img src="assets/img/laure-lumiere-700.webp"
+               srcset="assets/img/laure-lumiere-700.webp 700w, assets/img/laure-lumiere-1080.webp 1080w"
+               sizes="(max-width: 880px) 100vw, 45vw"
+               width="700" height="1244" loading="lazy"
+               alt="Laure assise sur son tapis, dans la lumière du matin">
+        </div>
+        <div class="reveal">
+          <h3 class="title-h2">Laure, professeure de yoga</h3>
+          <p>Professeure certifiée de yoga, j'ai à cœur de créer des moments chaleureux, dans un cadre sécurisant, afin que chacun·e se sente bien.</p>
+          <p>Au programme : mobilité, renforcement, souplesse, équilibre… et toujours un vrai moment de relaxation pour terminer la séance.</p>
+          <a class="btn btn--ghost" href="a-propos.html">En savoir plus</a>
+        </div>
       </div>
     </div>
   </section>
@@ -299,10 +308,10 @@ Je recommande vivement :) »</span>
   <section class="section section--ink cta">
     <div class="wrap reveal">
       <img class="moons" src="assets/img/lunes.svg" alt="">
-      <h2>Votre premier cours à 14 €</h2>
-      <p class="lead">Tarif découverte sur votre premier cours collectif, réservé et réglé en ligne. Ensuite, 17 € le cours ou 45 € la carte 3 cours.</p>
+      <h2>Trouvez votre prochain cours</h2>
+      <p class="lead">Consultez le calendrier des cours collectifs et réservez votre place en ligne en quelques clics.</p>
       <div class="btn-row">
-        <a class="btn btn--light" href="reserver.html">Réserver mon premier cours</a>
+        <a class="btn btn--light" href="planning.html">Voir le calendrier</a>
       </div>
     </div>
   </section>
@@ -314,7 +323,7 @@ Je recommande vivement :) »</span>
     <div class="footer-grid">
       <div>
         <a class="logo" href="index.html" aria-label="Laure Yoga Club — accueil"><b>LAURE</b><span>Yoga Club</span></a>
-        <p>Cours de yoga collectifs et inclusifs à Paris.</p>
+        <p>Cours de yoga inclusifs à Paris.</p>
       </div>
       <div>
         <h4>Contact</h4>
@@ -339,5 +348,7 @@ Je recommande vivement :) »</span>
 
 <script src="assets/js/main.js"></script>
 <script src="assets/js/avis.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/accueil.js"></script>
 </body>
 </html>

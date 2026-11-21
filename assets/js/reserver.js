@@ -8,6 +8,24 @@
   const form = $("#booking-form");
   const msg = $("#booking-msg");
   let selected = null;
+  let prices = null;
+
+  // Tarif découverte / parrainage : deux cases exclusives, seulement pour le paiement en ligne.
+  const discountBox = $("#discount");
+  const referralField = $("#referral-field");
+  function syncDiscount(e) {
+    const online = form.payment.value === "online";
+    discountBox.hidden = !online;
+    const boxes = [...form.querySelectorAll('input[name="discount"]')];
+    if (e && e.target.name === "discount" && e.target.checked) boxes.forEach((b) => { if (b !== e.target) b.checked = false; });
+    const chosen = online ? boxes.find((b) => b.checked) : null;
+    referralField.hidden = !(chosen && chosen.value === "referral");
+    form.referral_name.required = !referralField.hidden;
+    if (prices) $("#price-online").textContent = chosen ? `${fmt.euros(prices.discovery)} au lieu de ${fmt.euros(prices.online)}` : fmt.euros(prices.online);
+  }
+  form.addEventListener("change", syncDiscount);
+  if (params.get("premier")) form.querySelector('input[name="discount"][value="first"]').checked = true;
+  syncDiscount();
 
   function showMsg(el, html, kind) {
     el.innerHTML = html;
@@ -17,7 +35,11 @@
 
   function applyPrices(d) {
     const p = d.prices;
-    $("#price-online").textContent = `${fmt.euros(p.online)} · ${fmt.euros(p.discovery)} pour un premier cours`;
+    prices = p;
+    $("#price-online").textContent = fmt.euros(p.online);
+    document.querySelectorAll("[data-discovery-price]").forEach((el) => (el.textContent = fmt.euros(p.discovery)));
+    if (p.card_validity_days) $("#card-validity").textContent = p.card_validity_days % 30 === 0 ? `${p.card_validity_days / 30} mois` : `${p.card_validity_days} jours`;
+    syncDiscount();
     $("#card-price").textContent = fmt.euros(p.card);
     document.querySelectorAll("[data-card-credits]").forEach((el) => (el.textContent = p.card_credits));
     $("#cancel-hours").textContent = d.cancel_hours;
@@ -25,9 +47,9 @@
 
   function select(cls) {
     selected = cls;
-    $("#selected-class").textContent = `${fmt.day(cls.starts_at)} à ${fmt.time(cls.starts_at)} — ${cls.title}`;
+    $("#selected-class").textContent = `${cls.title} — ${fmt.day(cls.starts_at)}, ${fmt.range(cls.starts_at, cls.duration_min)}`;
     const addr = $("#selected-address");
-    addr.textContent = `${LycCalendar.addressOf(cls.location)} · ${cls.places_left} place${cls.places_left > 1 ? "s" : ""} restante${cls.places_left > 1 ? "s" : ""}`;
+    addr.textContent = LycCalendar.addressOf(cls.location);
     addr.hidden = false;
     msg.hidden = true;
     form.hidden = false;
@@ -61,6 +83,8 @@
           email: fd.get("email"),
           phone: fd.get("phone"),
           payment: fd.get("payment"),
+          discount: fd.get("payment") === "online" ? fd.get("discount") || undefined : undefined,
+          referral_name: fd.get("referral_name") || undefined,
           website: fd.get("website"),
         },
       });
@@ -68,7 +92,7 @@
       form.hidden = true;
       showMsg(
         msg,
-        `<h3>C'est réservé !</h3><p>Rendez-vous ${esc(fmt.day(selected.starts_at))} à ${esc(fmt.time(selected.starts_at))}, ${esc(LycCalendar.addressOf(selected.location))}. 1 cours a été décompté de votre carte (il vous en reste ${res.creditsLeft}).</p><p>Un email de confirmation vient de vous être envoyé à <b>${esc(fd.get("email"))}</b>.</p>`,
+        `<h3>C'est réservé !</h3><p>Rendez-vous ${esc(fmt.day(selected.starts_at))}, ${esc(fmt.range(selected.starts_at, selected.duration_min))}, ${esc(LycCalendar.addressOf(selected.location))}. 1 cours a été décompté de votre carte (il vous en reste ${res.creditsLeft}).</p><p>Un email de confirmation vient de vous être envoyé à <b>${esc(fd.get("email"))}</b>.</p>`,
         "ok",
       );
       calendar.reload();
@@ -105,6 +129,7 @@
   const reqForm = $("#request-form");
   const syncKind = () => {
     const ent = reqForm.kind.value === "entreprise";
+    reqForm.classList.toggle("is-entreprise", ent);
     reqForm.querySelectorAll(".only-entreprise").forEach((el) => (el.hidden = !ent));
     reqForm.company.required = ent;
   };

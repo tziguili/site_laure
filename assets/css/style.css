@@ -997,3 +997,112 @@ h1 em, h2 em { font-style: inherit; font-weight: inherit; color: inherit; font-f
 /* Accueil : un mot par ligne, sans point en bout de ligne */
 .h1-stack span { display: block; }
 .h1-stack .sep { display: none; }
+
+/* ============================================================
+   Retours cliente — 2e série (nov. 2026)
+   ============================================================ */
+/* Police un peu plus petite partout */
+body { font-size: 0.97rem; line-height: 1.7; }
+h1 { font-size: clamp(2.1rem, 4.6vw, 3.4rem); }
+h2 { font-size: clamp(1.6rem, 3.2vw, 2.25rem); }
+h3 { font-size: 1.3rem; }
+.lead { font-size: 1.08rem; }
+.trio-item h3 { font-size: 1.6rem; }
+.offer--big h3 { font-size: 1.75rem; }
+.price .amount { font-size: 3.5rem; }
+.page-hero .eyebrow + h1 { margin-top: 0; }
+
+/* Titre de section aligné à gauche (eyebrow + h2 + phrase), comme « La séance » */
+.section-head--left { margin-bottom: 2.2rem; }
+.section-head--left p { margin: 0; color: var(--ink-soft); }
+
+/* Accueil : en-tête centré sur fond photo + prochain cours */
+.home-hero { padding-block: clamp(3.5rem, 8vw, 6rem) clamp(4rem, 8vw, 6.5rem); text-align: center; }
+.home-hero.trio::before { background: linear-gradient(180deg, rgba(246, 240, 230, 0.86) 0%, rgba(246, 240, 230, 0.66) 45%, rgba(246, 240, 230, 0.35) 100%); }
+.home-hero h1 { max-width: 15em; margin-inline: auto; color: var(--ink-deep); }
+.home-hero .lead { margin: 0 auto; color: var(--ink-deep); }
+.next-class {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 1.2rem;
+  max-width: 860px;
+  margin: 2.6rem auto 0;
+  text-align: left;
+}
+.next-card, .first-card {
+  border-radius: var(--radius);
+  padding: 1.6rem 1.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  box-shadow: 0 24px 50px -32px rgba(29, 37, 80, 0.55);
+}
+.next-card { background: var(--white); }
+.next-card .eyebrow { margin: 0; }
+.next-body { display: flex; gap: 1.1rem; align-items: center; }
+.next-body .cp-date { width: 70px; height: 78px; }
+.next-body h3 { margin: 0 0 0.15rem; font-size: 1.3rem; }
+.next-body p { margin: 0; color: var(--muted); font-size: 0.93rem; line-height: 1.5; }
+.next-body .next-time { color: var(--ink); font-weight: 600; }
+.next-card .btn { align-self: flex-start; margin-top: auto; }
+.next-card.is-empty .next-body { display: block; color: var(--muted); }
+.first-card { background: var(--ink); color: var(--sand); align-items: flex-start; justify-content: center; }
+.first-card .first-price { font-family: var(--font-text); color: var(--cream); line-height: 1.1; margin: 0; font-size: 1.05rem; }
+.first-card .first-price b { display: block; font-family: var(--font-title); font-variation-settings: "SOFT" 100; font-weight: 650; font-size: 2.6rem; }
+.first-card p { margin: 0; font-size: 0.9rem; }
+.first-card .btn { background: var(--cream); border-color: var(--cream); color: var(--ink); }
+.first-card .btn:hover { background: var(--white); border-color: var(--white); color: var(--ink-deep); }
+@media (max-width: 720px) { .next-class { grid-template-columns: minmax(0, 1fr); } }
+
+/* Les 3 types de cours, sans fond photo */
+.courses .trio-item { background: var(--ink); }
+.courses .trio-link:hover { background: var(--ink-deep); }
+.trio-item.trio--brown { background: #4b3d34; }
+.courses .trio-link.trio--brown:hover { background: #3a2e27; }
+
+/* Avis : lien Google */
+.reviews-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem 1.6rem; margin-top: 2.2rem; }
+.reviews-links a { color: var(--white); }
+.reviews-links .btn { background: transparent; border-color: rgba(255, 253, 249, 0.75); color: var(--white); }
+.reviews-links .btn:hover { background: rgba(255, 253, 249, 0.15); border-color: var(--white); }
+
+/* Calendrier : horaire de début et de fin, sans places restantes */
+.cal { container-type: inline-size; }
+.cal-class b { white-space: nowrap; }
+.cal-end { font-weight: 400; }
+/* Calendrier étroit (page Réserver, mobile) : heure de fin sous l'heure de début */
+@container (max-width: 760px) {
+  .cal-class { align-items: center; }
+  .cal-class b { white-space: normal; text-align: center; line-height: 1.15; }
+  .cal-end { display: block; font-size: 0.72rem; opacity: 0.85; }
+  .cal-dash { display: none; }
+}
+
+/* Tarifs : vignette centrale (découverte) mise en avant, titre plus long */
+.price--featured h3 { font-size: 1.25rem; }
+
+/* Réserver : tarif découverte / parrainage */
+.discount { display: grid; gap: 0.5rem; }
+.form .discount .check { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.92rem; color: var(--ink); }
+.form .discount .check input { margin-top: 0.3em; width: auto; }
+.discount small { display: block; color: var(--muted); font-size: 0.82rem; }
+.form .radio .discount { margin-top: 0.4rem; }
+
+/* Réserver : formulaire « Yoga en entreprise » aux couleurs brunes */
+.form.is-entreprise {
+  --ink: #4b3d34; --ink-deep: #3a2e27; --ink-soft: #7a6352; --sun: #7a6352;
+  --sand: #e5d7ca; --sand-deep: #d3c0ae; --cream: #f8f4ef;
+  background: #f2ede7;
+}
+.form.is-entreprise .btn { background: var(--ink); border-color: var(--ink); }
+.form, .form .btn, .segmented span { transition: background-color 0.3s, border-color 0.3s, color 0.3s; }
+
+/* Entreprises : bloc d'intro à la taille des autres sections */
+.title-h2 { font-size: clamp(1.6rem, 3.2vw, 2.25rem); }
+.page-entreprise .ent-intro { padding-top: clamp(2.5rem, 6vw, 4rem); }
+.page-entreprise .trio:first-child { padding-top: clamp(3.5rem, 8vw, 6rem); }
+
+/* À propos : certifications */
+.certifs li b { color: var(--ink); font-weight: 600; }
+.grid-2-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; max-width: 780px; margin-inline: auto; }
+@media (max-width: 680px) { .grid-2-cards { grid-template-columns: minmax(0, 1fr); } }

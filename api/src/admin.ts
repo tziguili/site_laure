@@ -35,7 +35,7 @@ export async function listClasses(url: URL, env: Env): Promise<Response> {
   const [classes, bookings] = await env.DB.batch([
     env.DB.prepare("SELECT * FROM classes WHERE starts_at >= ? AND starts_at < ? ORDER BY starts_at").bind(from, to),
     env.DB.prepare(
-      `SELECT b.id, b.class_id, b.name, b.email, b.phone, b.payment, b.amount_cents, b.status, b.paid, b.created_at
+      `SELECT b.id, b.class_id, b.name, b.email, b.phone, b.payment, b.amount_cents, b.status, b.paid, b.created_at, b.discount, b.referral_name
        FROM bookings b JOIN classes c ON c.id = b.class_id
        WHERE c.starts_at >= ? AND c.starts_at < ? AND ${ACTIVE_BOOKING.replace(/status|expires_at/g, "b.$&")}
        ORDER BY b.created_at`,
@@ -159,7 +159,7 @@ export async function listCards(env: Env): Promise<Response> {
   const { results } = await env.DB.prepare(
     "SELECT id, name, email, credits_total, credits_left, amount_cents, payment, status, created_at FROM cards WHERE status = 'active' ORDER BY created_at DESC",
   ).all();
-  return json({ cards: results });
+  return json({ cards: results, validity_days: config(env).cardValidityDays });
 }
 
 /** POST /api/admin/cards — carte vendue sur place : { name, email, credits?, amount_cents? } */

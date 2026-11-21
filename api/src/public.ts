@@ -1,5 +1,5 @@
 // Routes publiques : liste des cours, réservation, carte, annulation, retour de paiement.
-import { ACTIVE_BOOKING, bookingInfo, cancelBooking, cancelDeadline, createBooking, type Payment } from "./bookings";
+import { ACTIVE_BOOKING, bookingInfo, cancelBooking, cancelDeadline, createBooking, type Discount, type Payment } from "./bookings";
 import { config, type Env } from "./env";
 import { createCheckoutSession } from "./stripe";
 import { quoteAckEmail, quoteRequestEmail, sendEmail } from "./email";
@@ -50,24 +50,28 @@ export async function listClasses(url: URL, env: Env): Promise<Response> {
       discovery: cfg.priceDiscovery,
       card: cfg.cardPrice,
       card_credits: cfg.cardCredits,
+      card_validity_days: cfg.cardValidityDays,
     },
     cancel_hours: cfg.cancelHours,
     classes: results.map(({ taken, capacity, ...c }) => ({ ...c, area: areaOf(c.location), places_left: Math.max(0, capacity - taken) })),
   });
 }
 
-/** POST /api/bookings — { class_id, name, email, phone?, payment } */
+/** POST /api/bookings — { class_id, name, email, phone?, payment, discount?: "first" | "referral", referral_name? } */
 export async function postBooking(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const body = await readJson(req);
   if (body.website) throw new HttpError(400, "Requête invalide."); // champ piège anti-robots
   const payment = String(body.payment) as Payment;
   if (!PAYMENTS.includes(payment)) throw new HttpError(400, "Mode de paiement invalide.");
+  const discount = body.discount === "first" || body.discount === "referral" ? (body.discount as Discount) : null;
   const result = await createBooking(env, ctx, {
     classId: cleanInt(body.class_id, "cours", 1, Number.MAX_SAFE_INTEGER),
     name: cleanText(body.name, "nom"),
     email: cleanEmail(body.email),
     phone: cleanText(body.phone, "téléphone", 30, false),
     payment,
+    discount,
+    referralName: discount === "referral" ? cleanText(body.referral_name, "nom de la personne parrainée", 120) : "",
     siteUrl: siteBase(req, env),
   });
   return json(result, 201);
@@ -171,6 +175,7 @@ export async function postContact(req: Request, env: Env, ctx: ExecutionContext)
     phone: cleanText(body.phone, "téléphone", 30, false),
     participants: cleanText(body.participants, "participants", 40, false),
     place: cleanText(body.place, "lieu", 60, false),
+    format: cleanText(body.format, "type d'intervention", 60, false),
     message: String(body.message ?? "").trim().slice(0, 3000),
   };
   if (!env.ADMIN_EMAIL) throw new HttpError(500, "Formulaire indisponible, écrivez à contact@laureyogaclub.fr.");

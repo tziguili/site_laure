@@ -88,9 +88,10 @@
         const items = (byDay.get(k) || [])
           .map((c) => {
             const full = c.places_left === 0;
-            const label = `${fmt.time(c.starts_at)} · ${c.title} · ${addressOf(c.location)} · ${full ? "complet" : c.places_left + " place" + (c.places_left > 1 ? "s" : "")}`;
+            const end = fmt.time(new Date(new Date(c.starts_at).getTime() + (c.duration_min || 60) * 60000).toISOString());
+            const label = `${c.title} · ${fmt.range(c.starts_at, c.duration_min)} · ${addressOf(c.location)}${full ? " · complet" : ""}`;
             return `<button type="button" class="cal-class${full ? " is-full" : ""}${selected === c.id ? " is-selected" : ""}" data-id="${c.id}" ${full ? "disabled" : ""} aria-label="${esc(label)}" title="${esc(label)}">
-              <b>${esc(fmt.time(c.starts_at))}</b><span class="cal-class-info">${full ? "Complet" : `${c.places_left} pl.`}</span>
+              <b>${esc(fmt.time(c.starts_at))}<span class="cal-dash"> – </span><span class="cal-end">${esc(end)}</span></b>${full ? `<span class="cal-class-info">Complet</span>` : ""}
             </button>`;
           })
           .join("");

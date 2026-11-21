@@ -78,31 +78,6 @@
 
 <main>
 
-<section class="hero">
-  <div class="wrap">
-    <div>
-      <span class="eyebrow">Paris &amp; petite couronne</span>
-      <h1>Yoga en entreprise.</h1>
-      <p class="lead">Des séances accessibles et adaptées aux capacités de chacun·e, pour faire une pause, relâcher les tensions et se ressourcer collectivement.</p>
-      <div class="btn-row">
-        <a class="btn" href="#devis">Demander un devis</a>
-        <a class="btn btn--ghost" href="tel:+33664791185">06 64 79 11 85</a>
-      </div>
-      <div class="hero-meta">
-        <span>Dans vos locaux ou dans un studio à proximité</span>
-        <span>Offre personnalisée</span>
-        <span>Tarif sur devis</span>
-      </div>
-    </div>
-    <div class="hero-media">
-      <img src="assets/img/posture-1000.webp"
-           srcset="assets/img/posture-1000.webp 1000w, assets/img/posture-2000.webp 2000w"
-           sizes="(max-width: 880px) 100vw, 55vw" width="1000" height="749"
-           alt="Laure dans une posture d'étirement latéral sur son tapis de yoga">
-    </div>
-  </div>
-</section>
-
 <section class="section section--sand trio">
   <div class="wrap">
     <div class="section-head section-head--center reveal">
@@ -126,7 +101,31 @@
   </div>
 </section>
 
-<section class="section">
+<section class="section ent-intro">
+  <div class="wrap grid-2">
+    <div class="reveal">
+      <span class="eyebrow">Paris &amp; petite couronne</span>
+      <h1 class="title-h2">Yoga en entreprise</h1>
+      <p>Des séances accessibles et adaptées aux capacités de chacun·e, pour faire une pause, relâcher les tensions et se ressourcer collectivement.</p>
+      <ul class="list-moon">
+        <li>Dans vos locaux ou dans un studio à proximité</li>
+        <li>Offre personnalisée, tarif sur devis</li>
+      </ul>
+      <div class="btn-row">
+        <a class="btn" href="#devis">Demander un devis</a>
+        <a class="btn btn--ghost" href="tel:+33664791185">06 64 79 11 85</a>
+      </div>
+    </div>
+    <div class="arch arch--landscape reveal">
+      <img src="assets/img/posture-1000.webp"
+           srcset="assets/img/posture-1000.webp 1000w, assets/img/posture-2000.webp 2000w"
+           sizes="(max-width: 880px) 100vw, 45vw" width="1000" height="749"
+           alt="Laure dans une posture d'étirement latéral sur son tapis de yoga">
+    </div>
+  </div>
+</section>
+
+<section class="section section--sand">
   <div class="wrap grid-2">
     <div class="arch arch--landscape reveal">
       <img src="assets/img/posture2-800.webp"
@@ -141,7 +140,25 @@
       <ul class="list-moon">
         <li>Dans vos locaux (salle de réunion, espace détente…) ou dans un studio à proximité</li>
         <li>Fréquence, horaires et durée selon vos contraintes</li>
-        <li>Paris et petite couronne</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="seminaire">
+  <div class="wrap grid-2">
+    <div class="reveal">
+      <span class="eyebrow">Séminaires et événements</span>
+      <h2>Un séminaire à organiser ?</h2>
+      <p>Journée d'équipe, séminaire, offsite ou semaine de la qualité de vie au travail : planifiez une intervention yoga ponctuelle, intégrée à votre programme.</p>
+      <a class="btn" href="#devis" data-format="Séminaire ou événement">Planifier une intervention</a>
+    </div>
+    <div class="reveal">
+      <ul class="list-moon">
+        <li>Un réveil en douceur le matin, une pause active entre deux ateliers ou un moment de relaxation en fin de journée</li>
+        <li>Une séance unique ou un fil rouge sur plusieurs jours</li>
+        <li>Sur le lieu de votre séminaire ou dans un studio à proximité</li>
+        <li>Un contenu adapté au groupe, quel que soit le niveau de chacun·e</li>
       </ul>
     </div>
   </div>
@@ -167,6 +184,13 @@
         <label>Email professionnel<input name="email" type="email" required autocomplete="email" maxlength="200"></label>
         <label><span>Téléphone <small>(facultatif)</small></span><input name="phone" type="tel" autocomplete="tel" maxlength="30"></label>
         <label><span>Nombre de participants <small>(environ)</small></span><input name="participants" maxlength="40" placeholder="ex. 10 à 15"></label>
+        <label>Type d'intervention
+          <select name="format">
+            <option>Séances régulières</option>
+            <option>Séminaire ou événement</option>
+            <option>À définir ensemble</option>
+          </select>
+        </label>
         <label>Lieu souhaité
           <select name="place">
             <option>Dans nos locaux</option>
@@ -190,7 +214,7 @@
     <div class="footer-grid">
       <div>
         <a class="logo" href="index.html" aria-label="Laure Yoga Club — accueil"><b>LAURE</b><span>Yoga Club</span></a>
-        <p>Cours de yoga collectifs et inclusifs à Paris.</p>
+        <p>Cours de yoga inclusifs à Paris.</p>
       </div>
       <div>
         <h4>Contact</h4>
