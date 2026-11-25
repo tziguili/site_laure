@@ -20,8 +20,8 @@
   <link rel="icon" href="assets/img/lune.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/fraunces-normal-latin-c8e588.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/lora-normal-latin-ecda3b.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/fonts.css?v=20261125f">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261125f">
+  <link rel="stylesheet" href="assets/css/fonts.css?v=20261125g">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261125g">
   <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
@@ -72,7 +72,7 @@
           <label>Prénom et nom<input name="name" required autocomplete="name" maxlength="120"></label>
           <label>Email<input name="email" type="email" required autocomplete="email" maxlength="200"></label>
           <label><span>Téléphone <small>(facultatif)</small></span><input name="phone" type="tel" autocomplete="tel" maxlength="30"></label>
-          <input name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <input name="hp_check" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" hidden>
           <fieldset>
             <legend>Paiement</legend>
             <label class="radio"><input type="radio" name="payment" value="online" checked><span><b>Payer en ligne</b><small id="price-online">17 €</small></span></label>
@@ -99,7 +99,7 @@
       <form id="card-form" class="form" novalidate>
         <label>Prénom et nom<input name="name" required autocomplete="name" maxlength="120"></label>
         <label>Email<input name="email" type="email" required autocomplete="email" maxlength="200"></label>
-        <input name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input name="hp_check" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" hidden>
         <button class="btn" type="submit">Acheter la carte</button>
         <div id="card-msg" hidden></div>
       </form>
@@ -129,7 +129,7 @@
         <label><span>Téléphone <small>(facultatif)</small></span><input name="phone" type="tel" autocomplete="tel" maxlength="30"></label>
         <label class="only-entreprise" hidden><span>Nombre de participants <small>(environ)</small></span><input name="participants" maxlength="40" placeholder="ex. 10 à 15"></label>
         <label><span>Votre message <small>(lieu, disponibilités, objectifs…)</small></span><textarea name="message" rows="4" maxlength="3000"></textarea></label>
-        <input name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input name="hp_check" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" hidden>
         <button class="btn" type="submit">Envoyer ma demande</button>
       </form>
       <div id="request-msg" hidden></div>
@@ -167,9 +167,9 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=20261125f"></script>
-<script src="assets/js/config.js?v=20261125f"></script>
-<script src="assets/js/calendar.js?v=20261125f"></script>
-<script src="assets/js/reserver.js?v=20261125f"></script>
+<script src="assets/js/main.js?v=20261125g"></script>
+<script src="assets/js/config.js?v=20261125g"></script>
+<script src="assets/js/calendar.js?v=20261125g"></script>
+<script src="assets/js/reserver.js?v=20261125g"></script>
 </body>
 </html>

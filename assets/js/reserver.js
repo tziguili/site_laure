@@ -88,7 +88,7 @@
           payment: fd.get("payment"),
           discount: fd.get("payment") === "online" ? fd.get("discount") || undefined : undefined,
           referral_email: fd.get("referral_email") || undefined,
-          website: fd.get("website"),
+          hp_check: fd.get("hp_check"),
         },
       });
       if (res.checkoutUrl) { location.href = res.checkoutUrl; return; }
@@ -119,7 +119,7 @@
     btn.disabled = true;
     btn.textContent = "Un instant…";
     try {
-      const res = await api("/cards", { method: "POST", body: { name: fd.get("name"), email: fd.get("email"), website: fd.get("website") } });
+      const res = await api("/cards", { method: "POST", body: { name: fd.get("name"), email: fd.get("email"), hp_check: fd.get("hp_check") } });
       location.href = res.checkoutUrl;
     } catch (err) {
       showMsg($("#card-msg"), esc(err.message), "error");

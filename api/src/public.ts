@@ -60,7 +60,8 @@ export async function listClasses(url: URL, env: Env): Promise<Response> {
 /** POST /api/bookings — { class_id, name, email, phone?, payment, discount?: "first" | "referral", referral_email? } */
 export async function postBooking(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const body = await readJson(req);
-  if (body.website) throw new HttpError(400, "Requête invalide."); // champ piège anti-robots
+  // Champ piège anti-robots, invisible (l'ancien champ « website » est ignoré : la saisie automatique des navigateurs le remplissait).
+  if (body.hp_check) throw new HttpError(400, "Requête invalide.");
   const payment = String(body.payment) as Payment;
   if (!PAYMENTS.includes(payment)) throw new HttpError(400, "Mode de paiement invalide.");
   const discount = body.discount === "first" || body.discount === "referral" ? (body.discount as Discount) : null;
@@ -80,7 +81,7 @@ export async function postBooking(req: Request, env: Env, ctx: ExecutionContext)
 /** POST /api/cards — achat d'une carte en ligne : { name, email } */
 export async function postCard(req: Request, env: Env): Promise<Response> {
   const body = await readJson(req);
-  if (body.website) throw new HttpError(400, "Requête invalide.");
+  if (body.hp_check) throw new HttpError(400, "Requête invalide."); // champ piège anti-robots
   const name = cleanText(body.name, "nom");
   const email = cleanEmail(body.email);
   const cfg = config(env);
@@ -165,7 +166,7 @@ export async function postCancel(env: Env, token: string): Promise<Response> {
 /** POST /api/contact — demande de cours particulier ou de devis entreprise ({ kind: "particulier" | "entreprise", … }). */
 export async function postContact(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const body = await readJson(req);
-  if (body.website) return json({ ok: true }); // champ piège : on fait comme si tout allait bien
+  if (body.hp_check) return json({ ok: true }); // champ piège : on fait comme si tout allait bien
   const kind: "particulier" | "entreprise" = body.kind === "particulier" ? "particulier" : "entreprise";
   const q = {
     kind,
