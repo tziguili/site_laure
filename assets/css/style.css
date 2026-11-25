@@ -1199,3 +1199,6 @@ h3 { font-size: 1.3rem; }
   .legal-links a { display: inline-block; padding-block: 0.6rem; }
   .reviews-links a:not(.btn), .area-card a, .small-note a, .info dd a { display: inline-block; padding-block: 0.6rem; }
 }
+
+/* Groupe de mots à garder sur une même ligne (ex. titre de l’accueil) */
+.nowrap { white-space: nowrap; }
