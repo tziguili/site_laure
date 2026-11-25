@@ -36,6 +36,7 @@
       </div>
       <div class="cal-areas" role="group" aria-label="Lieu"></div>
       <div class="cal-grid" role="grid"></div>
+      <ul class="cal-list" aria-label="Cours du mois"></ul>
       <p class="cal-empty" hidden></p>`;
     const $ = (s) => root.querySelector(s);
 
@@ -99,8 +100,25 @@
           <span class="cal-num">${dd}</span>${items}</div>`;
       }
       $(".cal-grid").innerHTML = html;
+      const inMonth = list.filter((c) => { const p = parisParts(c.starts_at); return p.m === m && p.y === y; });
+
+      // Vue liste (téléphone : affichée à la place de la grille, voir CSS) — une ligne large par cours
+      $(".cal-list").innerHTML = inMonth
+        .map((c) => {
+          const full = c.places_left === 0;
+          return `<li><button type="button" class="cal-row${full ? " is-full" : ""}${selected === c.id ? " is-selected" : ""}" data-id="${c.id}" ${full ? "disabled" : ""}>
+            <span class="cp-date"><small>${esc(fmt.dayShort(c.starts_at))}</small><b>${esc(fmt.dayNum(c.starts_at))}</b><small>${esc(fmt.month(c.starts_at))}</small></span>
+            <span class="cal-row-body">
+              <b>${esc(fmt.range(c.starts_at, c.duration_min))}</b>
+              <span>${esc(c.title)}</span>
+              <span class="cal-row-place">${esc(addressOf(c.location))}</span>
+            </span>
+            <span class="cal-row-cta">${full ? "Complet" : `Réserver<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>`}</span>
+          </button></li>`;
+        })
+        .join("");
+
       const empty = $(".cal-empty");
-      const inMonth = list.filter((c) => parisParts(c.starts_at).m === m);
       empty.hidden = inMonth.length > 0 || !data;
       empty.textContent = "Aucun cours n'est encore programmé ce mois-ci. Essayez le mois suivant, ou écrivez-moi à contact@laureyogaclub.fr.";
     }
@@ -130,7 +148,7 @@
       }
       const a = e.target.closest(".cal-area");
       if (a) { area = a.dataset.area || null; render(); return; }
-      const c = e.target.closest(".cal-class");
+      const c = e.target.closest(".cal-class, .cal-row");
       if (c && !c.disabled && data) {
         const cls = data.classes.find((x) => x.id === Number(c.dataset.id));
         selected = cls.id;

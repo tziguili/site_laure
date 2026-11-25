@@ -1160,3 +1160,42 @@ h3 { font-size: 1.3rem; }
 .list-moon--light li::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Ccircle cx='13' cy='13' r='13' fill='%23f6f0e6'/%3E%3Cpath d='M7.5 13.5l3.6 3.6 7.4-7.6' fill='none' stroke='%23484d75' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
+
+/* ============================================================
+   Téléphones : calendrier en liste, zones de tap plus grandes
+   ============================================================ */
+/* Calendrier étroit : la liste des cours du mois remplace la grille */
+.cal-list { display: none; list-style: none; margin: 0; padding: 0; }
+@container (max-width: 560px) {
+  .cal-grid { display: none; }
+  .cal-list { display: grid; gap: 0.6rem; }
+  .cal-areas { margin: 0.8rem 0 1rem; }
+}
+.cal-row {
+  display: flex; align-items: center; gap: 0.9rem; width: 100%; min-height: 76px;
+  padding: 0.7rem 0.9rem 0.7rem 0.7rem; text-align: left; font: inherit; color: var(--text);
+  background: var(--cream); border: 1.5px solid transparent; border-radius: 14px; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.cal-row .cp-date { width: 56px; height: 62px; }
+.cal-row .cp-date b { font-size: 1.35rem; }
+.cal-row-body { flex: 1; min-width: 0; display: grid; line-height: 1.35; }
+.cal-row-body b { color: var(--ink); font-size: 1.05rem; }
+.cal-row-body span { font-size: 0.9rem; }
+.cal-row-place { color: var(--muted); font-size: 0.82rem !important; overflow-wrap: anywhere; }
+.cal-row-cta { flex: none; display: inline-flex; align-items: center; gap: 0.1rem; font-size: 0.88rem; font-weight: 600; color: var(--ink); }
+.cal-row-cta svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.cal-row:hover:not(:disabled) { border-color: var(--sand-deep); }
+.cal-row.is-selected { border-color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, var(--white)); }
+.cal-row.is-full { opacity: 0.6; cursor: not-allowed; }
+.cal-row.is-full .cal-row-cta { color: var(--muted); font-weight: 400; }
+
+/* Zones de tap ≥ 44 px sur écran tactile (sans changer l'apparence) */
+@media (pointer: coarse), (max-width: 760px) {
+  .cal-area { min-height: 44px; }
+  .site-footer li:not(.social) a { display: inline-block; padding-block: 0.55rem; }
+  .site-footer li { margin-bottom: 0; }
+  .legal-links { gap: 0 1.2rem; }
+  .legal-links a { display: inline-block; padding-block: 0.6rem; }
+  .reviews-links a:not(.btn), .area-card a, .small-note a, .info dd a { display: inline-block; padding-block: 0.6rem; }
+}
