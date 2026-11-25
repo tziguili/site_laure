@@ -28,3 +28,10 @@ if ("IntersectionObserver" in window) {
 // Année du pied de page
 const y = document.getElementById("year");
 if (y) y.textContent = new Date().getFullYear();
+
+// Aperçu local uniquement : lien « Admin » dans le menu (jamais affiché sur le site en ligne)
+if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && nav) {
+  const li = document.createElement("li");
+  li.innerHTML = '<a href="admin.html" class="dev-admin-link">Admin</a>';
+  nav.querySelector("ul")?.appendChild(li);
+}

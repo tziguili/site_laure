@@ -20,8 +20,8 @@
   <link rel="icon" href="assets/img/lune.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/fraunces-normal-latin-c8e588.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/lora-normal-latin-ecda3b.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/fonts.css?v=20261121b">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261121b">
+  <link rel="stylesheet" href="assets/css/fonts.css?v=20261125c">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261125c">
   <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
@@ -63,22 +63,21 @@
 </section>
 
 <section class="section">
-  <div class="wrap grid-2 where">
-    <div class="reveal">
+  <div class="wrap">
+    <div class="section-head section-head--left reveal">
       <span class="eyebrow">Où ?</span>
       <h2>Les lieux</h2>
-      <div class="area-card">
+    </div>
+    <!-- Rempli par assets/js/lieux.js depuis l'admin ; Maison Né reste affichée si l'API ne répond pas. -->
+    <div class="venues" id="venues">
+      <article class="area-card">
         <span class="area-badge">Paris 12</span>
         <h3>Maison Né</h3>
         <p>25 rue Beccaria, 75012 Paris<br>Près de la place d'Aligre, à 5 minutes à pied de Gare de Lyon.</p>
         <a href="https://www.google.com/maps/search/?api=1&amp;query=25+rue+Beccaria+75012+Paris" target="_blank" rel="noopener">Itinéraire →</a>
-      </div>
-      <p class="small-note">D'autres lieux et arrondissements arrivent bientôt. Pensez à arriver 5 minutes avant le début du cours.</p>
+      </article>
     </div>
-    <div class="map reveal">
-      <iframe title="Carte : Maison Né, 25 rue Beccaria, 75012 Paris" loading="lazy"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=2.3665%2C48.8430%2C2.3905%2C48.8540&amp;layer=mapnik&amp;marker=48.84843%2C2.37856"></iframe>
-    </div>
+    <p class="small-note">Pensez à arriver 5 minutes avant le début du cours.</p>
   </div>
 </section>
 
@@ -112,9 +111,10 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=20261121b"></script>
-<script src="assets/js/config.js?v=20261121b"></script>
-<script src="assets/js/calendar.js?v=20261121b"></script>
+<script src="assets/js/main.js?v=20261125c"></script>
+<script src="assets/js/config.js?v=20261125c"></script>
+<script src="assets/js/calendar.js?v=20261125c"></script>
+<script src="assets/js/lieux.js?v=20261125c"></script>
 <script>
   // Clic sur un cours : ouverture de la réservation avec ce cours sélectionné
   LycCalendar(document.getElementById("calendar"), { onSelect: (c) => { location.href = "reserver.html?cours=" + c.id + "#collectifs"; } });

@@ -5,6 +5,7 @@ import * as pub from "./public";
 import { HttpError, json } from "./util";
 import { sendReviewRequests } from "./reviews";
 import { stripeWebhook } from "./webhook";
+import * as venues from "./venues";
 
 function corsHeaders(req: Request, env: Env): Record<string, string> {
   const origin = req.headers.get("origin") ?? "";
@@ -12,7 +13,7 @@ function corsHeaders(req: Request, env: Env): Record<string, string> {
   if (!allowed.includes(origin)) return {};
   return {
     "access-control-allow-origin": origin,
-    "access-control-allow-methods": "GET, POST, PATCH, DELETE, OPTIONS",
+    "access-control-allow-methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
     "access-control-allow-headers": "content-type, authorization",
     "access-control-max-age": "86400",
     vary: "origin",
@@ -27,6 +28,8 @@ async function route(req: Request, env: Env, ctx: ExecutionContext): Promise<Res
 
   // --- Public ---
   if (m === "GET" && path === "/api/classes") return pub.listClasses(url, env);
+  if (m === "GET" && path === "/api/venues") return venues.listVenues(req, env);
+  if (m === "GET" && (p = path.match(/^\/api\/venues\/(\d+)\/photo$/))) return venues.getPhoto(env, Number(p[1]));
   if (m === "POST" && path === "/api/bookings") return pub.postBooking(req, env, ctx);
   if (m === "POST" && path === "/api/cards") return pub.postCard(req, env);
   if (m === "POST" && path === "/api/contact") return pub.postContact(req, env, ctx);
@@ -49,6 +52,16 @@ async function route(req: Request, env: Env, ctx: ExecutionContext): Promise<Res
     if (m === "POST" && path === "/api/admin/bookings") return admin.addBooking(req, env, ctx);
     if (m === "PATCH" && (p = path.match(/^\/api\/admin\/bookings\/(\d+)$/))) return admin.updateBooking(req, env, Number(p[1]));
     if (m === "POST" && (p = path.match(/^\/api\/admin\/bookings\/(\d+)\/cancel$/))) return admin.adminCancelBooking(env, Number(p[1]));
+    if (m === "GET" && path === "/api/admin/venues") return venues.adminListVenues(req, env);
+    if (m === "POST" && path === "/api/admin/venues") return venues.createVenue(req, env);
+    if ((p = path.match(/^\/api\/admin\/venues\/(\d+)$/))) {
+      if (m === "PATCH") return venues.updateVenue(req, env, Number(p[1]));
+      if (m === "DELETE") return venues.deleteVenue(env, Number(p[1]));
+    }
+    if ((p = path.match(/^\/api\/admin\/venues\/(\d+)\/photo$/))) {
+      if (m === "PUT") return venues.putPhoto(req, env, Number(p[1]));
+      if (m === "DELETE") return venues.deletePhoto(env, Number(p[1]));
+    }
     if (m === "GET" && path === "/api/admin/cards") return admin.listCards(env);
     if (m === "POST" && path === "/api/admin/cards") return admin.addCard(req, env);
     if (m === "PATCH" && (p = path.match(/^\/api\/admin\/cards\/(\d+)$/))) return admin.updateCard(req, env, Number(p[1]));

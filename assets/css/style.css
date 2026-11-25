@@ -1108,3 +1108,55 @@ h3 { font-size: 1.3rem; }
 @media (max-width: 680px) { .grid-2-cards { grid-template-columns: minmax(0, 1fr); } }
 #price-online s { opacity: 0.7; }
 #price-online .price-now { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   Retours cliente — 3e série (nov. 2026)
+   ============================================================ */
+/* Accueil : photo légèrement floutée (flou moyen) en fond de la première rubrique */
+.home-hero--photo { background-image: url("../img/flou-moyen-posture.webp"); background-position: center 40%; }
+
+/* Planning : encarts des lieux — texte en bas, fond bleu ou photo d'ambiance (ajoutée par Laure dans l'admin) */
+.venues { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 1.2rem; }
+.venues .area-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  min-height: 250px;
+  padding: 1.4rem;
+  border: 0;
+  color: var(--white);
+  background: var(--ink) var(--venue-photo, none) center / cover no-repeat;
+}
+.venues .area-card.has-photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(29, 37, 80, 0) 20%, rgba(29, 37, 80, 0.55) 52%, rgba(29, 37, 80, 0.9) 100%);
+}
+.venues .area-card h3 { margin: 0.6rem 0 0.2rem; font-size: 1.2rem; color: var(--white); }
+.venues .area-card p { margin: 0 0 0.6rem; font-size: 0.9rem; line-height: 1.5; }
+.venues .area-card a { color: var(--white); font-size: 0.92rem; }
+.venues .area-badge { background: var(--cream); color: var(--ink); font-size: 0.85rem; padding: 0.2rem 0.8rem; }
+
+/* Lien Admin du menu : aperçu local uniquement (voir main.js) */
+.dev-admin-link { opacity: 0.6; }
+
+/* Admin : lieux */
+.venue-admin { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+.venue-photo { aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden; background: var(--sand); display: grid; place-items: center; font-size: 0.9rem; }
+.venue-photo img { width: 100%; height: 100%; object-fit: cover; }
+.venue-admin .form { gap: 0.8rem; }
+.venue-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.2rem; grid-column: 1 / -1; }
+@media (max-width: 700px) { .venue-admin { grid-template-columns: minmax(0, 1fr); } }
+
+/* Tarifs : puces cochées sur la vignette bleue (découverte et parrainage) */
+.price .list-moon { text-align: left; margin: 0 0 1.6rem; font-size: 0.92rem; }
+.price .list-moon li { margin-bottom: 0.5rem; }
+.list-moon--light li::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Ccircle cx='13' cy='13' r='13' fill='%23f6f0e6'/%3E%3Cpath d='M7.5 13.5l3.6 3.6 7.4-7.6' fill='none' stroke='%23484d75' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}

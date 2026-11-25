@@ -8,8 +8,8 @@
   <link rel="icon" href="assets/img/lune.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/fraunces-normal-latin-c8e588.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/lora-normal-latin-ecda3b.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/fonts.css?v=20261121b">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261121b">
+  <link rel="stylesheet" href="assets/css/fonts.css?v=20261125c">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261125c">
 </head>
 <body class="admin">
 
@@ -19,6 +19,7 @@
     <nav class="admin-nav">
       <a href="#planning">Planning</a>
       <a href="#creer">Créer des cours</a>
+      <a href="#lieux">Lieux</a>
       <a href="#cartes">Cartes</a>
       <button class="link-btn" id="logout" type="button">Déconnexion</button>
     </nav>
@@ -58,8 +59,24 @@
           </select>
         </label>
         <label>Titre<input name="title" placeholder="Cours de yoga" maxlength="80"></label>
-        <label class="span-2">Lieu<input name="location" placeholder="Maison Né, 25 rue Beccaria, 75012 Paris" maxlength="160"></label>
+        <label class="span-2">Lieu <small>(choisir dans la liste ou saisir une adresse)</small><input name="location" list="venue-options" placeholder="Maison Né, 25 rue Beccaria, 75012 Paris" maxlength="160"></label>
+        <datalist id="venue-options"></datalist>
         <button class="btn" type="submit">Créer</button>
+      </form>
+    </section>
+
+    <section id="lieux" class="admin-section">
+      <h2>Lieux</h2>
+      <p class="muted">Les lieux affichés sur la page Planning. La photo apparaît en fond de l'encart du lieu.</p>
+      <div id="venues"><p class="muted">Chargement…</p></div>
+      <h3>Ajouter un lieu</h3>
+      <form id="new-venue" class="form card form-grid">
+        <label>Nom du lieu<input name="name" required maxlength="80" placeholder="Maison Né"></label>
+        <label class="span-2">Adresse<input name="address" required maxlength="160" placeholder="25 rue Beccaria, 75012 Paris"></label>
+        <label class="span-2">Infos <small>(accès, ambiance…)</small><textarea name="info" maxlength="400" rows="2" placeholder="Près de la place d'Aligre, à 5 minutes à pied de Gare de Lyon."></textarea></label>
+        <label class="span-2">Lien Google Maps <small>(facultatif)</small><input name="maps_url" type="url" maxlength="500" placeholder="https://maps.app.goo.gl/…"></label>
+        <label>Photo <small>(facultatif)</small><input name="photo" type="file" accept="image/*"></label>
+        <button class="btn" type="submit">Ajouter le lieu</button>
       </form>
     </section>
 
@@ -79,7 +96,7 @@
   <div id="toast" class="toast" hidden role="status"></div>
 </main>
 
-<script src="assets/js/config.js?v=20261121b"></script>
-<script src="assets/js/admin.js?v=20261121b"></script>
+<script src="assets/js/config.js?v=20261125c"></script>
+<script src="assets/js/admin.js?v=20261125c"></script>
 </body>
 </html>

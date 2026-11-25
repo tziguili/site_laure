@@ -213,6 +213,134 @@
     } catch (err) { toast(err.message, "error"); }
   });
 
+  // ---------- Lieux ----------
+  // Photo redimensionnée dans le navigateur (1600 px max, JPEG) avant l'envoi : léger pour le site et la base.
+  async function resizePhoto(file) {
+    if (!file.type.startsWith("image/")) throw new Error("Choisissez une image (JPEG, PNG, HEIC converti…).");
+    let bmp;
+    try {
+      bmp = await createImageBitmap(file, { imageOrientation: "from-image" });
+    } catch {
+      throw new Error("Cette image n'a pas pu être lue. Essayez une photo JPEG ou PNG.");
+    }
+    const k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bmp.width * k);
+    canvas.height = Math.round(bmp.height * k);
+    canvas.getContext("2d").drawImage(bmp, 0, 0, canvas.width, canvas.height);
+    let blob;
+    for (const q of [0.82, 0.7, 0.6, 0.5]) {
+      blob = await new Promise((r) => canvas.toBlob(r, "image/jpeg", q));
+      if (blob && blob.size < 1_400_000) return blob;
+    }
+    throw new Error("Photo trop lourde, même réduite.");
+  }
+
+  async function uploadPhoto(id, file) {
+    const blob = await resizePhoto(file);
+    let res;
+    try {
+      res = await fetch(`${window.API_BASE}/admin/venues/${id}/photo`, {
+        method: "PUT",
+        headers: { authorization: `Bearer ${token}`, "content-type": "image/jpeg" },
+        body: blob,
+      });
+    } catch {
+      throw new Error("Connexion impossible. Vérifiez votre connexion internet et réessayez.");
+    }
+    const data = await res.json().catch(() => ({}));
+    if (res.status === 401) logout();
+    if (!res.ok) throw new Error(data.error || "La photo n'a pas pu être enregistrée.");
+  }
+
+  const venueHtml = (v) => `<article class="admin-class venue-admin">
+      <div class="venue-photo">${v.photo_url ? `<img src="${esc(v.photo_url)}" alt="Photo de ${esc(v.name)}">` : `<span class="muted">Pas de photo</span>`}</div>
+      <form class="form form-grid" data-venue="${v.id}">
+        <label>Nom du lieu<input name="name" required maxlength="80" value="${esc(v.name)}"></label>
+        <label>Ordre <small>(0 = en premier)</small><input name="position" type="number" min="0" max="999" value="${esc(v.position)}"></label>
+        <label class="span-2">Adresse<input name="address" required maxlength="160" value="${esc(v.address)}"></label>
+        <label class="span-2">Infos <small>(accès, ambiance…)</small><textarea name="info" maxlength="400" rows="2">${esc(v.info)}</textarea></label>
+        <label class="span-2">Lien Google Maps <small>(vide = recherche sur l'adresse)</small><input name="maps_url" type="url" maxlength="500" value="${esc(v.maps_url_raw)}"></label>
+        <label>${v.photo_url ? "Changer la photo" : "Ajouter une photo"}<input name="photo" type="file" accept="image/*"></label>
+        <div class="venue-actions">
+          <button class="btn btn--small" type="submit">Enregistrer</button>
+          ${v.photo_url ? `<button class="link-btn" type="button" data-venue-photo-delete="${v.id}">Retirer la photo</button>` : ""}
+          <button class="link-btn danger" type="button" data-venue-delete="${v.id}">Supprimer le lieu</button>
+        </div>
+      </form>
+    </article>`;
+
+  async function loadVenues() {
+    const box = $("#venues");
+    try {
+      const r = await call("/admin/venues");
+      box.innerHTML = r.venues.length ? r.venues.map(venueHtml).join("") : `<p class="muted">Aucun lieu. Ajoutez-en un ci-dessous.</p>`;
+      $("#venue-options").innerHTML = r.venues.map((v) => `<option value="${esc(`${v.name}, ${v.address}`)}"></option>`).join("");
+    } catch (err) {
+      box.innerHTML = `<p class="form-msg form-msg--error">${esc(err.message)}</p>`;
+    }
+  }
+
+  const venueBody = (fd) => ({ name: fd.get("name"), address: fd.get("address"), info: fd.get("info"), maps_url: fd.get("maps_url"), position: fd.get("position") ?? undefined });
+
+  $("#venues").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const f = e.target;
+    const btn = f.querySelector("button[type=submit]");
+    const fd = new FormData(f);
+    const file = fd.get("photo");
+    btn.disabled = true;
+    try {
+      await call(`/admin/venues/${f.dataset.venue}`, { method: "PATCH", body: venueBody(fd) });
+      if (file && file.size) await uploadPhoto(f.dataset.venue, file);
+      toast("Lieu enregistré.");
+      loadVenues();
+    } catch (err) { toast(err.message, "error"); }
+    finally { btn.disabled = false; }
+  });
+
+  $("#venues").addEventListener("click", (e) => {
+    const t = e.target;
+    if (t.dataset.venueDelete) {
+      confirmAction(t, "Cliquez encore pour supprimer ce lieu", async () => {
+        try {
+          await call(`/admin/venues/${t.dataset.venueDelete}`, { method: "DELETE" });
+          toast("Lieu supprimé (les cours déjà créés gardent leur adresse).");
+          loadVenues();
+        } catch (err) { toast(err.message, "error"); }
+      });
+    }
+    if (t.dataset.venuePhotoDelete) {
+      confirmAction(t, "Cliquez encore pour retirer la photo", async () => {
+        try {
+          await call(`/admin/venues/${t.dataset.venuePhotoDelete}/photo`, { method: "DELETE" });
+          toast("Photo retirée.");
+          loadVenues();
+        } catch (err) { toast(err.message, "error"); }
+      });
+    }
+  });
+
+  $("#new-venue").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const f = e.target;
+    const btn = f.querySelector("button[type=submit]");
+    const fd = new FormData(f);
+    const file = fd.get("photo");
+    btn.disabled = true;
+    try {
+      const r = await call("/admin/venues", { method: "POST", body: venueBody(fd) });
+      if (file && file.size) {
+        try { await uploadPhoto(r.id, file); }
+        catch (err) { toast(`Lieu ajouté, mais la photo n'a pas pu être enregistrée : ${err.message}`, "error"); f.reset(); loadVenues(); return; }
+      }
+      toast("Lieu ajouté.");
+      f.reset();
+      loadVenues();
+    } catch (err) { toast(err.message, "error"); }
+    finally { btn.disabled = false; }
+  });
+
   // ---------- Cartes ----------
   async function loadCards() {
     const box = $("#cards");
@@ -266,6 +394,7 @@
     $("#login").hidden = true;
     $("#app").hidden = false;
     loadClasses();
+    loadVenues();
     loadCards();
   }
   if (token) start();
