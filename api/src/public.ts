@@ -203,15 +203,15 @@ export async function postMove(req: Request, env: Env, ctx: ExecutionContext, to
 
 /**
  * POST /api/gifts — carte cadeau payée en ligne :
- * { formula: "single" | "card", from_name, from_email, to_name, to_email, message?, send_to: "recipient" | "buyer" }
+ * { from_name, from_email, to_name, to_email, message?, send_to: "recipient" | "buyer" } — uniquement la carte 3 cours
  */
 export async function postGift(req: Request, env: Env): Promise<Response> {
   const body = await readJson(req);
   if (body.hp_check) throw new HttpError(400, "Requête invalide.");
   const cfg = config(env);
-  const formula = body.formula === "single" ? "single" : "card";
-  const credits = formula === "single" ? 1 : cfg.cardCredits;
-  const amount = formula === "single" ? cfg.priceOnline : cfg.cardPrice;
+  // Carte cadeau = carte 3 cours uniquement (décision cliente 2026-11-27)
+  const credits = cfg.cardCredits;
+  const amount = cfg.cardPrice;
   const fromName = cleanText(body.from_name, "votre nom");
   const fromEmail = cleanEmail(body.from_email);
   const toName = cleanText(body.to_name, "prénom et nom de la personne");
@@ -230,7 +230,7 @@ export async function postGift(req: Request, env: Env): Promise<Response> {
   const session = await createCheckoutSession(
     env,
     {
-      name: formula === "single" ? "Carte cadeau — 1 cours de yoga" : `Carte cadeau — ${credits} cours de yoga`,
+      name: `Carte cadeau — ${credits} cours de yoga`,
       description: `Pour ${toName}, valable 6 mois · Laure Yoga Club`,
       amountCents: amount,
       email: fromEmail,

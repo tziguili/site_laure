@@ -44,7 +44,7 @@
     if (p.card_validity_days) $("#card-validity").textContent = p.card_validity_days % 30 === 0 ? `${p.card_validity_days / 30} mois` : `${p.card_validity_days} jours`;
     syncDiscount();
     $("#card-price").textContent = fmt.euros(p.card);
-    if ($("#gift-price-single")) { $("#gift-price-single").textContent = fmt.euros(p.online); $("#gift-price-card").textContent = fmt.euros(p.card); }
+    if ($("#gift-price-card")) $("#gift-price-card").textContent = fmt.euros(p.card);
     document.querySelectorAll("[data-card-credits]").forEach((el) => (el.textContent = p.card_credits));
     $("#cancel-hours").textContent = d.cancel_hours;
   }

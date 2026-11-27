@@ -20,8 +20,8 @@
   <link rel="icon" href="assets/img/lune.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/fraunces-normal-latin-c8e588.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/lora-normal-latin-ecda3b.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/fonts.css?v=20261127">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261127">
+  <link rel="stylesheet" href="assets/css/fonts.css?v=20261127b">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261127b">
   <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
@@ -108,16 +108,12 @@
     <div class="card-buy gift-buy" id="cadeau">
       <div>
         <span class="eyebrow">🎁 Carte cadeau</span>
-        <h3>Offrir un cours de yoga</h3>
-        <p>Faites découvrir le yoga à un·e proche : offrez <b>1 cours</b> (<span id="gift-price-single">17 €</span>) ou une <b>carte <span data-card-credits>3</span> cours</b> (<span id="gift-price-card">45 €</span>), valable <b>6 mois</b>.</p>
+        <h3>Offrir une carte 3 cours</h3>
+        <p>Faites découvrir le yoga à un·e proche : offrez une <b>carte 3 cours</b> (<span id="gift-price-card">45 €</span>), valable <b>6 mois</b>.</p>
         <p>La carte est envoyée par email à la personne (ou à vous, pour l'offrir vous-même) avec votre message. Elle réserve ensuite ses cours en choisissant « J'ai une carte ».</p>
       </div>
       <form id="gift-form" class="form" novalidate>
-        <fieldset class="segmented">
-          <legend>Je souhaite offrir</legend>
-          <label><input type="radio" name="formula" value="single" checked><span>1 cours</span></label>
-          <label><input type="radio" name="formula" value="card"><span>Carte 3 cours</span></label>
-        </fieldset>
+        <input type="hidden" name="formula" value="card">
         <label>Votre prénom et nom<input name="from_name" required autocomplete="name" maxlength="120"></label>
         <label>Votre email<input name="from_email" type="email" required autocomplete="email" maxlength="200"></label>
         <label>Prénom et nom de la personne<input name="to_name" required autocomplete="off" maxlength="120"></label>
@@ -197,9 +193,9 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=20261127"></script>
-<script src="assets/js/config.js?v=20261127"></script>
-<script src="assets/js/calendar.js?v=20261127"></script>
-<script src="assets/js/reserver.js?v=20261127"></script>
+<script src="assets/js/main.js?v=20261127b"></script>
+<script src="assets/js/config.js?v=20261127b"></script>
+<script src="assets/js/calendar.js?v=20261127b"></script>
+<script src="assets/js/reserver.js?v=20261127b"></script>
 </body>
 </html>
