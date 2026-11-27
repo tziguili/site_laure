@@ -5,7 +5,7 @@
   <meta name="robots" content="noindex">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ma réservation — Laure Yoga Club</title>
-  <meta name="description" content="Gérer ou annuler votre réservation.">
+  <meta name="description" content="Gérer, reporter ou annuler votre réservation.">
   <meta property="og:title" content="Ma réservation — Laure Yoga Club">
   <meta property="og:description" content="Du yoga pour prendre soin de son corps en douceur. Petits groupes, tous niveaux.">
   <meta property="og:image" content="assets/img/posture-1000.webp">
@@ -13,8 +13,8 @@
   <link rel="icon" href="assets/img/lune.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/fraunces-normal-latin-c8e588.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/lora-normal-latin-ecda3b.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/fonts.css?v=20261125g">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261125g">
+  <link rel="stylesheet" href="assets/css/fonts.css?v=20261127">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261127">
   <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
@@ -48,10 +48,24 @@
     <h1 id="title">Un instant…</h1>
     <p class="lead" id="text"></p>
     <div class="btn-row" style="justify-content:center">
-      <button class="btn" id="cancel-btn" type="button" hidden>Annuler ma réservation</button>
+      <button class="btn" id="move-btn" type="button" hidden>Reporter sur un autre cours</button>
+      <button class="btn btn--ghost" id="cancel-btn" type="button" hidden>Annuler ma réservation</button>
       <button class="btn btn--ghost" id="confirm-btn" type="button" hidden>Oui, annuler</button>
-      <a class="btn btn--ghost" href="reserver.html">Réserver un autre cours</a>
+      <a class="btn btn--ghost" id="book-other" href="reserver.html">Réserver un autre cours</a>
     </div>
+  </div>
+</section>
+
+<section class="section section--sand" id="move" hidden>
+  <div class="wrap move-wrap">
+    <h2>Reporter sur un autre cours</h2>
+    <p class="lead">Choisissez le nouveau cours dans le calendrier : votre paiement reste le même.</p>
+    <div id="move-calendar"></div>
+    <div class="move-confirm" id="move-confirm" hidden>
+      <p id="move-choice"></p>
+      <button class="btn" id="move-ok" type="button">Confirmer le report</button>
+    </div>
+    <div id="move-msg" hidden></div>
   </div>
 </section>
 
@@ -76,6 +90,7 @@
     <div class="footer-bottom">
       <span>© <span id="year">2026</span> Laure Yoga Club</span>
       <nav class="legal-links" aria-label="Informations légales">
+        <a href="reserver.html#cadeau">Carte cadeau</a>
         <a href="mentions-legales.html">Mentions légales</a>
         <a href="cgv.html">CGV</a>
         <a href="cgu.html">CGU</a>
@@ -85,8 +100,9 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=20261125g"></script>
-<script src="assets/js/config.js?v=20261125g"></script>
-<script src="assets/js/annulation.js?v=20261125g"></script>
+<script src="assets/js/main.js?v=20261127"></script>
+<script src="assets/js/config.js?v=20261127"></script>
+<script src="assets/js/calendar.js?v=20261127"></script>
+<script src="assets/js/annulation.js?v=20261127"></script>
 </body>
 </html>

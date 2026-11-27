@@ -36,6 +36,8 @@ async function route(req: Request, env: Env, ctx: ExecutionContext): Promise<Res
   if (m === "GET" && (p = path.match(/^\/api\/checkout\/([\w-]+)$/))) return pub.getCheckoutStatus(env, p[1]!);
   if (m === "GET" && (p = path.match(/^\/api\/bookings\/([\w-]+)$/))) return pub.getBooking(env, p[1]!);
   if (m === "POST" && (p = path.match(/^\/api\/bookings\/([\w-]+)\/cancel$/))) return pub.postCancel(env, p[1]!);
+  if (m === "POST" && (p = path.match(/^\/api\/bookings\/([\w-]+)\/move$/))) return pub.postMove(req, env, ctx, p[1]!);
+  if (m === "POST" && path === "/api/gifts") return pub.postGift(req, env);
   if (m === "POST" && path === "/api/stripe/webhook") return stripeWebhook(req, env, ctx);
 
   // --- Admin ---

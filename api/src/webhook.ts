@@ -1,6 +1,6 @@
 // Webhook Stripe : confirme les paiements, libère les places des paiements abandonnés.
 import { notifyConfirmed } from "./bookings";
-import { cardActivatedEmail, sendEmail } from "./email";
+import { cardActivatedEmail, giftEmail, giftReceiptEmail, sendEmail, type GiftCard } from "./email";
 import { config } from "./env";
 import type { Env } from "./env";
 import { verifyWebhook } from "./stripe";
@@ -22,12 +22,23 @@ export async function stripeWebhook(req: Request, env: Env, ctx: ExecutionContex
       if (res.meta.changes) ctx.waitUntil(notifyConfirmed(env, Number(meta.booking_id)));
     }
     if (meta.kind === "card") {
+      // Carte cadeau : sa validité (1 an) démarre au paiement ; carte classique : règle CARD_VALIDITY_DAYS.
+      const giftUntil = new Date(Date.now() + config(env).giftValidityDays * 86_400_000).toISOString();
       const card = await env.DB.prepare(
-        "UPDATE cards SET status = 'active', payment_intent = ? WHERE id = ? AND stripe_session_id = ? AND status = 'pending' RETURNING *",
+        `UPDATE cards SET status = 'active', payment_intent = ?,
+           expires_at = CASE WHEN gift_from_email IS NOT NULL THEN ? ELSE expires_at END
+         WHERE id = ? AND stripe_session_id = ? AND status = 'pending' RETURNING *`,
       )
-        .bind(session.payment_intent, Number(meta.card_id), session.id)
-        .first<{ name: string; email: string; credits_total: number; amount_cents: number; created_at: string }>();
-      if (card) ctx.waitUntil(sendEmail(env, cardActivatedEmail(env, card, config(env).cardValidityDays)));
+        .bind(session.payment_intent, giftUntil, Number(meta.card_id), session.id)
+        .first<GiftCard & { created_at: string }>();
+      if (card && card.gift_from_email) {
+        ctx.waitUntil(
+          (async () => {
+            await sendEmail(env, giftEmail(env, card));
+            if (card.gift_send_to !== "buyer") await sendEmail(env, giftReceiptEmail(card));
+          })(),
+        );
+      } else if (card) ctx.waitUntil(sendEmail(env, cardActivatedEmail(env, card, config(env).cardValidityDays)));
     }
   }
 

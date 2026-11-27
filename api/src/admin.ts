@@ -157,7 +157,7 @@ export async function adminCancelBooking(env: Env, id: number): Promise<Response
 /** GET /api/admin/cards */
 export async function listCards(env: Env): Promise<Response> {
   const { results } = await env.DB.prepare(
-    "SELECT id, name, email, credits_total, credits_left, amount_cents, payment, status, created_at FROM cards WHERE status = 'active' ORDER BY created_at DESC",
+    "SELECT id, name, email, credits_total, credits_left, amount_cents, payment, status, created_at, expires_at, gift_from_name FROM cards WHERE status = 'active' ORDER BY created_at DESC",
   ).all();
   return json({ cards: results, validity_days: config(env).cardValidityDays });
 }

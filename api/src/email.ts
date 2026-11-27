@@ -85,7 +85,7 @@ export function bookingConfirmedEmail(env: Env, b: BookingInfo, cancelHours: num
         (b.discount === "first"
           ? p(`Vous venez avec la personne qui vous a fait découvrir les cours ? Elle peut maintenant réserver sa place au <b>tarif parrainage</b> pour ce même cours, en indiquant votre adresse email : <b>${e(b.email)}</b>.`)
           : "") +
-        p(`Un empêchement ? Vous pouvez annuler jusqu'à ${cancelHours} h avant le cours :`) +
+        p(`Un empêchement ? Vous pouvez annuler ou reporter votre réservation sur un autre cours jusqu'à ${cancelHours} h avant :`) +
         btn(`${env.SITE_URL}/annulation.html?t=${encodeURIComponent(b.token)}`, "Gérer ma réservation") +
         p(`À très vite sur le tapis,<br>Laure`),
     ),
@@ -206,6 +206,85 @@ export function reviewRequestEmail(env: Env, r: { name: string; email: string; s
         p("Une remarque, une idée pour les prochains cours ? Répondez simplement à cet email, je le lirai avec attention.") +
         p(`À très vite sur le tapis,<br>Laure`) +
         `<p style="margin:18px 0 0;font-size:12px;color:#6b6878">Vous ne recevrez ce message qu'une seule fois.</p>`,
+    ),
+  };
+}
+
+const longDate = (iso: string) =>
+  new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", day: "numeric", month: "long", year: "numeric" }).format(new Date(iso));
+
+/** Réservation reportée sur un autre cours → élève. */
+export function bookingMovedEmail(env: Env, b: BookingInfo, oldStartsAt: string, cancelHours: number): Mail {
+  return {
+    to: b.email,
+    subject: `Réservation reportée — ${formatClassDate(b.starts_at)}`,
+    html: layout(
+      "Votre réservation est reportée",
+      p(`C'est noté : votre place du ${formatClassDate(oldStartsAt)} est reportée au <b>${e(b.title)}</b> du <b>${formatClassDate(b.starts_at)}</b>.`) +
+        p(`📍 ${e(b.location)}<br>Pensez à arriver 5 minutes avant le début du cours.`) +
+        p(`Votre paiement reste le même. Vous pouvez encore annuler ou reporter jusqu'à ${cancelHours} h avant le cours :`) +
+        btn(`${env.SITE_URL}/annulation.html?t=${encodeURIComponent(b.token)}`, "Gérer ma réservation") +
+        p(`À très vite sur le tapis,<br>Laure`),
+    ),
+  };
+}
+
+/** Report → notification à Laure. */
+export function adminMoveEmail(env: Env, b: BookingInfo, oldStartsAt: string): Mail {
+  return {
+    to: env.ADMIN_EMAIL,
+    subject: `Report : ${b.name} — ${formatClassDate(b.starts_at)}`,
+    html: layout(
+      "Réservation reportée",
+      p(`<b>${e(b.name)}</b> (${e(b.email)}) a reporté sa réservation du ${formatClassDate(oldStartsAt)} au <b>${formatClassDate(b.starts_at)}</b>.`) +
+        btn(`${env.SITE_URL}/admin.html`, "Voir le planning"),
+    ),
+  };
+}
+
+export interface GiftCard {
+  name: string;               // destinataire
+  email: string;
+  credits_total: number;
+  amount_cents: number;
+  expires_at: string;
+  gift_from_name: string;
+  gift_from_email: string;
+  gift_message: string | null;
+  gift_send_to: string | null;
+}
+
+const giftWhat = (c: GiftCard) => (c.credits_total > 1 ? `une carte de ${c.credits_total} cours de yoga` : "un cours de yoga");
+
+/** Carte cadeau → destinataire (ou acheteur, s'il préfère l'offrir lui-même). */
+export function giftEmail(env: Env, c: GiftCard): Mail {
+  const toBuyer = c.gift_send_to === "buyer";
+  const howTo =
+    p(`Pour en profiter : choisissez un cours dans le planning, puis sélectionnez « J'ai une carte » et indiquez l'adresse email <b>${e(c.email)}</b>. La carte est valable jusqu'au <b>${longDate(c.expires_at)}</b>.`) +
+    btn(`${env.SITE_URL}/planning.html`, "Voir les prochains cours");
+  const message = c.gift_message ? `<blockquote style="margin:0 0 14px;padding:12px 16px;border-left:3px solid #484d75;background:#f6f0e6;font-style:italic;line-height:1.6">${e(c.gift_message).replace(/\n/g, "<br>")}</blockquote>` : "";
+  return {
+    to: toBuyer ? c.gift_from_email : c.email,
+    subject: toBuyer ? `Votre carte cadeau pour ${c.name}` : `${c.gift_from_name} vous offre ${giftWhat(c)} 🎁`,
+    html: layout(
+      toBuyer ? `La carte cadeau de ${e(c.name.split(" ")[0])}` : `Un cadeau pour vous, ${e(c.name.split(" ")[0])} !`,
+      p(toBuyer
+        ? `Voici la carte cadeau à offrir à <b>${e(c.name)}</b> : <b>${giftWhat(c)}</b> avec Laure Yoga Club, à Paris. Vous pouvez lui transférer cet email ou l'imprimer.`
+        : `<b>${e(c.gift_from_name)}</b> vous offre <b>${giftWhat(c)}</b> avec Laure Yoga Club, à Paris : des cours en petit groupe, pour tous les niveaux.`) +
+        message + howTo + p(`Au plaisir de vous accueillir sur le tapis,<br>Laure`),
+    ),
+  };
+}
+
+/** Accusé d'achat → acheteur (quand l'email cadeau part directement au destinataire). */
+export function giftReceiptEmail(c: GiftCard): Mail {
+  return {
+    to: c.gift_from_email,
+    subject: `Votre carte cadeau pour ${c.name} a été envoyée`,
+    html: layout(
+      `Merci ${e(c.gift_from_name.split(" ")[0])} !`,
+      p(`Votre carte cadeau (<b>${giftWhat(c)}</b>, ${euros(c.amount_cents)}) vient d'être envoyée à <b>${e(c.name)}</b> (${e(c.email)}). Elle est valable jusqu'au ${longDate(c.expires_at)}.`) +
+        p(`À bientôt,<br>Laure`),
     ),
   };
 }

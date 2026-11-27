@@ -1202,3 +1202,19 @@ h3 { font-size: 1.3rem; }
 
 /* Groupe de mots à garder sur une même ligne (ex. titre de l’accueil) */
 .nowrap { white-space: nowrap; }
+
+/* Carte cadeau (Réserver, Tarifs) et report de réservation */
+.gift-buy { border: 1px dashed color-mix(in srgb, var(--ink) 35%, transparent); scroll-margin-top: 90px; }
+.gift-buy textarea { min-height: 4.5rem; }
+.gift-banner {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem;
+  margin-top: 2.5rem; padding: 1.6rem 2rem; border-radius: var(--radius);
+  background: var(--white); border: 1px dashed color-mix(in srgb, var(--ink) 35%, transparent);
+}
+.gift-banner h3 { margin: 0 0 0.3rem; }
+.gift-banner p { margin: 0; color: var(--ink-soft); }
+.move-wrap { max-width: 900px; }
+.move-wrap .lead { margin-bottom: 1.5rem; }
+.move-confirm { margin-top: 1.2rem; padding: 1.2rem 1.4rem; background: var(--white); border-radius: var(--radius); display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; }
+.move-confirm p { margin: 0; font-weight: 500; }
+#move { scroll-margin-top: 80px; }

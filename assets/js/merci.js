@@ -17,9 +17,17 @@
         text.innerHTML = `Rendez-vous ${esc(fmt.day(r.starts_at))} à ${esc(fmt.time(r.starts_at))} — ${esc(r.location)}. Un email de confirmation vous a été envoyé.`;
         return;
       }
+      if (r.kind === "card" && r.status === "active" && r.gift_from_name) {
+        const what = r.credits_total > 1 ? `la carte ${r.credits_total} cours` : "le cours";
+        title.textContent = "Merci, votre carte cadeau est prête !";
+        text.textContent = r.gift_send_to === "buyer"
+          ? `Vous venez de recevoir par email la carte cadeau (${what}) à offrir à ${r.name}. Bon cadeau !`
+          : `${r.name} vient de recevoir par email votre carte cadeau (${what}). Un récapitulatif vous a aussi été envoyé.`;
+        return;
+      }
       if (r.kind === "card" && r.status === "active") {
-        title.innerHTML = "Merci, <em>votre carte est active !</em>";
-        text.textContent = `Votre carte ${r.credits_total} cours est prête. Pour l'utiliser, réservez un cours en choisissant « Ma carte » avec la même adresse email.`;
+        title.textContent = "Merci, votre carte est active !";
+        text.textContent = `Votre carte ${r.credits_total} cours est prête. Pour l'utiliser, réservez un cours en choisissant « J'ai une carte » avec la même adresse email.`;
         return;
       }
     } catch (err) {

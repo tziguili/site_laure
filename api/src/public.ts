@@ -1,5 +1,5 @@
 // Routes publiques : liste des cours, réservation, carte, annulation, retour de paiement.
-import { ACTIVE_BOOKING, bookingInfo, cancelBooking, cancelDeadline, createBooking, type Discount, type Payment } from "./bookings";
+import { ACTIVE_BOOKING, bookingInfo, cancelBooking, cancelDeadline, createBooking, moveBooking, type Discount, type Payment } from "./bookings";
 import { config, type Env } from "./env";
 import { createCheckoutSession } from "./stripe";
 import { quoteAckEmail, quoteRequestEmail, sendEmail } from "./email";
@@ -51,6 +51,7 @@ export async function listClasses(url: URL, env: Env): Promise<Response> {
       card: cfg.cardPrice,
       card_credits: cfg.cardCredits,
       card_validity_days: cfg.cardValidityDays,
+      gift_validity_days: cfg.giftValidityDays,
     },
     cancel_hours: cfg.cancelHours,
     classes: results.map(({ taken, capacity, ...c }) => ({ ...c, area: areaOf(c.location), places_left: Math.max(0, capacity - taken) })),
@@ -122,7 +123,7 @@ export async function getCheckoutStatus(env: Env, sessionId: string): Promise<Re
     .bind(sessionId)
     .first();
   if (b) return json({ kind: "booking", ...b });
-  const c = await env.DB.prepare("SELECT status, amount_cents, name, credits_total FROM cards WHERE stripe_session_id = ?")
+  const c = await env.DB.prepare("SELECT status, amount_cents, name, credits_total, gift_from_name, gift_send_to FROM cards WHERE stripe_session_id = ?")
     .bind(sessionId)
     .first();
   if (c) return json({ kind: "card", ...c });
@@ -148,8 +149,10 @@ export async function getBooking(env: Env, token: string): Promise<Response> {
     starts_at: b.starts_at,
     title: b.title,
     location: b.location,
+    class_id: b.class_id,
     cancel_deadline: deadline,
     can_cancel: b.status === "confirmed" && nowIso() < deadline,
+    can_move: b.status === "confirmed" && nowIso() < deadline,
   });
 }
 
@@ -184,4 +187,60 @@ export async function postContact(req: Request, env: Env, ctx: ExecutionContext)
     throw new HttpError(502, "L'envoi a échoué. Réessayez, ou écrivez directement à contact@laureyogaclub.fr.");
   ctx.waitUntil(sendEmail(env, quoteAckEmail(q)));
   return json({ ok: true }, 201);
+}
+
+/** POST /api/bookings/:token/move — { class_id } : report sur un autre cours (mêmes délais que l'annulation). */
+export async function postMove(req: Request, env: Env, ctx: ExecutionContext, token: string): Promise<Response> {
+  const b = await findByToken(env, token);
+  if (b.status !== "confirmed") throw new HttpError(409, "Cette réservation n'est plus active.");
+  if (nowIso() >= cancelDeadline(env, b.starts_at))
+    throw new HttpError(403, `Le délai pour reporter en ligne (${config(env).cancelHours} h avant le cours) est dépassé. Contactez Laure directement.`);
+  const body = await readJson(req);
+  await moveBooking(env, ctx, b.id, cleanInt(body.class_id, "cours", 1, Number.MAX_SAFE_INTEGER));
+  const moved = await bookingInfo(env.DB, b.id);
+  return json({ ok: true, starts_at: moved?.starts_at, title: moved?.title, location: moved?.location });
+}
+
+/**
+ * POST /api/gifts — carte cadeau payée en ligne :
+ * { formula: "single" | "card", from_name, from_email, to_name, to_email, message?, send_to: "recipient" | "buyer" }
+ */
+export async function postGift(req: Request, env: Env): Promise<Response> {
+  const body = await readJson(req);
+  if (body.hp_check) throw new HttpError(400, "Requête invalide.");
+  const cfg = config(env);
+  const formula = body.formula === "single" ? "single" : "card";
+  const credits = formula === "single" ? 1 : cfg.cardCredits;
+  const amount = formula === "single" ? cfg.priceOnline : cfg.cardPrice;
+  const fromName = cleanText(body.from_name, "votre nom");
+  const fromEmail = cleanEmail(body.from_email);
+  const toName = cleanText(body.to_name, "prénom et nom de la personne");
+  const toEmail = cleanEmail(body.to_email);
+  const message = String(body.message ?? "").trim().slice(0, 500) || null;
+  const sendTo = body.send_to === "buyer" ? "buyer" : "recipient";
+  const site = siteBase(req, env);
+  const card = await env.DB.prepare(
+    `INSERT INTO cards (name, email, credits_total, credits_left, amount_cents, payment, status, created_at,
+                        gift_from_name, gift_from_email, gift_message, gift_send_to)
+     VALUES (?, ?, ?, ?, ?, 'online', 'pending', ?, ?, ?, ?, ?) RETURNING id`,
+  )
+    .bind(toName, toEmail, credits, credits, amount, nowIso(), fromName, fromEmail, message, sendTo)
+    .first<{ id: number }>();
+  if (!card) throw new HttpError(500, "Erreur interne.");
+  const session = await createCheckoutSession(
+    env,
+    {
+      name: formula === "single" ? "Carte cadeau — 1 cours de yoga" : `Carte cadeau — ${credits} cours de yoga`,
+      description: `Pour ${toName}, valable 1 an · Laure Yoga Club`,
+      amountCents: amount,
+      email: fromEmail,
+      metadata: { kind: "card", card_id: String(card.id), gift: "1" },
+      successUrl: `${site}/merci.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${site}/reserver.html#cadeau`,
+      expiresInMinutes: 60,
+    },
+    `gift-${card.id}`,
+  );
+  await env.DB.prepare("UPDATE cards SET stripe_session_id = ? WHERE id = ?").bind(session.id, card.id).run();
+  return json({ checkoutUrl: session.url }, 201);
 }

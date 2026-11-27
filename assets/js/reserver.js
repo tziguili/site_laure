@@ -44,6 +44,7 @@
     if (p.card_validity_days) $("#card-validity").textContent = p.card_validity_days % 30 === 0 ? `${p.card_validity_days / 30} mois` : `${p.card_validity_days} jours`;
     syncDiscount();
     $("#card-price").textContent = fmt.euros(p.card);
+    if ($("#gift-price-single")) { $("#gift-price-single").textContent = fmt.euros(p.online); $("#gift-price-card").textContent = fmt.euros(p.card); }
     document.querySelectorAll("[data-card-credits]").forEach((el) => (el.textContent = p.card_credits));
     $("#cancel-hours").textContent = d.cancel_hours;
   }
@@ -108,6 +109,28 @@
       btn.textContent = "Confirmer la réservation";
     }
   });
+
+  // Carte cadeau
+  const giftForm = $("#gift-form");
+  if (giftForm) {
+    giftForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!giftForm.reportValidity()) return;
+      const fd = new FormData(giftForm);
+      const btn = giftForm.querySelector("button[type=submit]");
+      const out = $("#gift-msg");
+      btn.disabled = true;
+      btn.textContent = "Un instant…";
+      try {
+        const res = await api("/gifts", { method: "POST", body: Object.fromEntries(fd) });
+        location.href = res.checkoutUrl;
+      } catch (err) {
+        showMsg(out, esc(err.message), "error");
+        btn.disabled = false;
+        btn.textContent = "Offrir la carte cadeau";
+      }
+    });
+  }
 
   // Achat de la carte 3 cours
   const cardForm = $("#card-form");

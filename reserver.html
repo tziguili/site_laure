@@ -20,8 +20,8 @@
   <link rel="icon" href="assets/img/lune.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/fraunces-normal-latin-c8e588.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/lora-normal-latin-ecda3b.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/fonts.css?v=20261125g">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261125g">
+  <link rel="stylesheet" href="assets/css/fonts.css?v=20261127">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261127">
   <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
@@ -76,7 +76,7 @@
           <fieldset>
             <legend>Paiement</legend>
             <label class="radio"><input type="radio" name="payment" value="online" checked><span><b>Payer en ligne</b><small id="price-online">17 €</small></span></label>
-            <label class="radio"><input type="radio" name="payment" value="card"><span><b>J'ai déjà une carte <span data-card-credits>3</span> cours</b><small>1 cours décompté · <a href="#carte">pas encore de carte ?</a></small></span></label>
+            <label class="radio"><input type="radio" name="payment" value="card"><span><b>J'ai une carte (<span data-card-credits>3</span> cours ou cadeau)</b><small>1 cours décompté · <a href="#carte">pas encore de carte ?</a></small></span></label>
           </fieldset>
           <fieldset class="discount" id="discount">
             <legend>Tarif découverte et parrainage (<span data-discovery-price>14 €</span>)</legend>
@@ -94,7 +94,7 @@
       <div>
         <span class="eyebrow">Carte <span data-card-credits>3</span> cours</span>
         <h3>Revenir régulièrement, à petit prix</h3>
-        <p>La carte <span data-card-credits>3</span> cours (<b id="card-price">45 €</b>, soit 15 € le cours) s'utilise quand vous voulez pendant <span id="card-validity">2 mois</span>. Une fois achetée, réservez vos cours ci-dessus en choisissant « J'ai déjà une carte » avec la même adresse email.</p>
+        <p>La carte <span data-card-credits>3</span> cours (<b id="card-price">45 €</b>, soit 15 € le cours) s'utilise quand vous voulez pendant <span id="card-validity">2 mois</span>. Une fois achetée, réservez vos cours ci-dessus en choisissant « J'ai une carte » avec la même adresse email.</p>
       </div>
       <form id="card-form" class="form" novalidate>
         <label>Prénom et nom<input name="name" required autocomplete="name" maxlength="120"></label>
@@ -102,6 +102,35 @@
         <input name="hp_check" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" hidden>
         <button class="btn" type="submit">Acheter la carte</button>
         <div id="card-msg" hidden></div>
+      </form>
+    </div>
+
+    <div class="card-buy gift-buy" id="cadeau">
+      <div>
+        <span class="eyebrow">🎁 Carte cadeau</span>
+        <h3>Offrir un cours de yoga</h3>
+        <p>Faites découvrir le yoga à un·e proche : offrez <b>1 cours</b> (<span id="gift-price-single">17 €</span>) ou une <b>carte <span data-card-credits>3</span> cours</b> (<span id="gift-price-card">45 €</span>), valable <b>1 an</b>.</p>
+        <p>La carte est envoyée par email à la personne (ou à vous, pour l'offrir vous-même) avec votre message. Elle réserve ensuite ses cours en choisissant « J'ai une carte ».</p>
+      </div>
+      <form id="gift-form" class="form" novalidate>
+        <fieldset class="segmented">
+          <legend>Je souhaite offrir</legend>
+          <label><input type="radio" name="formula" value="single" checked><span>1 cours</span></label>
+          <label><input type="radio" name="formula" value="card"><span>Carte 3 cours</span></label>
+        </fieldset>
+        <label>Votre prénom et nom<input name="from_name" required autocomplete="name" maxlength="120"></label>
+        <label>Votre email<input name="from_email" type="email" required autocomplete="email" maxlength="200"></label>
+        <label>Prénom et nom de la personne<input name="to_name" required autocomplete="off" maxlength="120"></label>
+        <label><span>Son email <small>(la carte est rattachée à cette adresse)</small></span><input name="to_email" type="email" required autocomplete="off" maxlength="200"></label>
+        <label><span>Votre message <small>(facultatif)</small></span><textarea name="message" rows="3" maxlength="500"></textarea></label>
+        <fieldset class="segmented">
+          <legend>Envoyer la carte cadeau</legend>
+          <label><input type="radio" name="send_to" value="recipient" checked><span>À la personne</span></label>
+          <label><input type="radio" name="send_to" value="buyer"><span>À moi</span></label>
+        </fieldset>
+        <input name="hp_check" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" hidden>
+        <button class="btn" type="submit">Offrir la carte cadeau</button>
+        <div id="gift-msg" hidden></div>
       </form>
     </div>
   </div>
@@ -158,6 +187,7 @@
     <div class="footer-bottom">
       <span>© <span id="year">2026</span> Laure Yoga Club</span>
       <nav class="legal-links" aria-label="Informations légales">
+        <a href="reserver.html#cadeau">Carte cadeau</a>
         <a href="mentions-legales.html">Mentions légales</a>
         <a href="cgv.html">CGV</a>
         <a href="cgu.html">CGU</a>
@@ -167,9 +197,9 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=20261125g"></script>
-<script src="assets/js/config.js?v=20261125g"></script>
-<script src="assets/js/calendar.js?v=20261125g"></script>
-<script src="assets/js/reserver.js?v=20261125g"></script>
+<script src="assets/js/main.js?v=20261127"></script>
+<script src="assets/js/config.js?v=20261127"></script>
+<script src="assets/js/calendar.js?v=20261127"></script>
+<script src="assets/js/reserver.js?v=20261127"></script>
 </body>
 </html>

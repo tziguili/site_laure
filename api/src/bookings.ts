@@ -1,7 +1,9 @@
 // Logique métier des réservations, partagée entre le site public et l'admin.
 import { config, type Env } from "./env";
 import {
+  adminMoveEmail,
   adminNotificationEmail,
+  bookingMovedEmail,
   bookingCancelledEmail,
   bookingConfirmedEmail,
   classCancelledEmail,
@@ -174,13 +176,15 @@ export async function createBooking(env: Env, ctx: ExecutionContext, input: NewB
     const card = await db
       .prepare(
         `UPDATE cards SET credits_left = credits_left - 1
-         WHERE id = (SELECT id FROM cards WHERE email = ? AND status = 'active' AND credits_left > 0 AND created_at >= ? ORDER BY id LIMIT 1)
+         WHERE id = (SELECT id FROM cards WHERE email = ?1 AND status = 'active' AND credits_left > 0
+                       AND (CASE WHEN expires_at IS NOT NULL THEN expires_at > ?3 ELSE created_at >= ?2 END)
+                     ORDER BY COALESCE(expires_at, created_at), id LIMIT 1)
            AND credits_left > 0
          RETURNING id, credits_left`,
       )
-      .bind(input.email, new Date(Date.now() - cfg.cardValidityDays * 86_400_000).toISOString())
+      .bind(input.email, new Date(Date.now() - cfg.cardValidityDays * 86_400_000).toISOString(), now)
       .first<{ id: number; credits_left: number }>();
-    if (!card) throw new HttpError(402, "Aucune carte valide avec des cours restants n'est associée à cette adresse email (une carte est valable 2 mois).");
+    if (!card) throw new HttpError(402, "Aucune carte valide avec des cours restants n'est associée à cette adresse email (une carte 3 cours est valable 2 mois, une carte cadeau 1 an).");
     cardId = card.id;
     creditsLeft = card.credits_left;
   }
@@ -296,4 +300,42 @@ export async function cancelBooking(env: Env, bookingId: number, reason: CancelR
 /** Le client peut-il encore annuler lui-même ? */
 export function cancelDeadline(env: Env, startsAt: string): string {
   return new Date(new Date(startsAt).getTime() - config(env).cancelHours * 3_600_000).toISOString();
+}
+
+/**
+ * Report d'une réservation confirmée sur un autre cours (même paiement, même lien de gestion).
+ * Une seule requête conditionnelle : le report échoue si le nouveau cours est complet, annulé ou passé.
+ */
+export async function moveBooking(env: Env, ctx: ExecutionContext, bookingId: number, newClassId: number): Promise<void> {
+  const db = env.DB;
+  const now = nowIso();
+  const b = await bookingInfo(db, bookingId);
+  if (!b || b.status !== "confirmed") throw new HttpError(409, "Seule une réservation confirmée peut être reportée.");
+  if (b.class_id === newClassId) throw new HttpError(409, "Vous êtes déjà inscrit·e à ce cours.");
+  const target = await getClass(db, newClassId);
+  if (!target || target.cancelled || target.starts_at <= now) throw new HttpError(404, "Ce cours n'est plus disponible.");
+  const dup = await db
+    .prepare(`SELECT id FROM bookings WHERE class_id = ? AND email = ? AND ${ACTIVE_BOOKING}`)
+    .bind(newClassId, b.email, now)
+    .first();
+  if (dup) throw new HttpError(409, "Vous avez déjà une réservation pour ce cours.");
+  const res = await db
+    .prepare(
+      `UPDATE bookings SET class_id = ?1, moved_from_class_id = class_id, moved_at = ?2, review_sent_at = NULL
+       WHERE id = ?3 AND status = 'confirmed'
+         AND (SELECT capacity FROM classes WHERE id = ?1 AND cancelled = 0 AND starts_at > ?2)
+             > (SELECT COUNT(*) FROM bookings WHERE class_id = ?1 AND (status = 'confirmed' OR (status = 'pending' AND expires_at > ?2)))`,
+    )
+    .bind(newClassId, now, bookingId)
+    .run();
+  if (!res.meta.changes) throw new HttpError(409, "Désolée, ce cours vient d'être complet. Choisissez-en un autre.");
+  const moved = await bookingInfo(db, bookingId);
+  if (moved) {
+    ctx.waitUntil(
+      (async () => {
+        await sendEmail(env, bookingMovedEmail(env, moved, b.starts_at, config(env).cancelHours));
+        if (env.ADMIN_EMAIL) await sendEmail(env, adminMoveEmail(env, moved, b.starts_at));
+      })(),
+    );
+  }
 }
