@@ -14,7 +14,7 @@ PRICE_ON_SITE_CENTS = "1700"     # cours payé sur place
 PRICE_DISCOVERY_CENTS = "1400"   # tarif découverte / parrainage (case cochée en ligne)
 CARD_PRICE_CENTS = "4500"
 CARD_CREDITS = "3"
-GIFT_VALIDITY_DAYS = "60"        # carte cadeau valable 2 mois à partir de l'achat
+GIFT_VALIDITY_DAYS = "182"       # carte cadeau valable 6 mois à partir de l'achat
 CARD_VALIDITY_DAYS = "60"        # carte 3 cours valable 2 mois à partir de l'achat
 
 DEFAULT_CAPACITY = "8"               # groupes de 8 max (flyer)

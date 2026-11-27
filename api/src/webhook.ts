@@ -22,7 +22,7 @@ export async function stripeWebhook(req: Request, env: Env, ctx: ExecutionContex
       if (res.meta.changes) ctx.waitUntil(notifyConfirmed(env, Number(meta.booking_id)));
     }
     if (meta.kind === "card") {
-      // Carte cadeau : sa validité (2 mois) démarre au paiement ; carte classique : règle CARD_VALIDITY_DAYS.
+      // Carte cadeau : sa validité (6 mois) démarre au paiement ; carte classique : règle CARD_VALIDITY_DAYS.
       const giftUntil = new Date(Date.now() + config(env).giftValidityDays * 86_400_000).toISOString();
       const card = await env.DB.prepare(
         `UPDATE cards SET status = 'active', payment_intent = ?,

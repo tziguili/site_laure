@@ -40,7 +40,7 @@ export function config(env: Env) {
     cardPrice: num(env.CARD_PRICE_CENTS, 4800),
     cardCredits: num(env.CARD_CREDITS, 3),
     cardValidityDays: num(env.CARD_VALIDITY_DAYS, 60),
-    giftValidityDays: num(env.GIFT_VALIDITY_DAYS, 60),
+    giftValidityDays: num(env.GIFT_VALIDITY_DAYS, 182),
     defaultCapacity: num(env.DEFAULT_CAPACITY, 10),
     cancelHours: num(env.CANCEL_HOURS, 24),
     holdMinutes: Math.max(31, num(env.HOLD_MINUTES, 35)),
