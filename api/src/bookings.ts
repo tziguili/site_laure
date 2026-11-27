@@ -184,7 +184,7 @@ export async function createBooking(env: Env, ctx: ExecutionContext, input: NewB
       )
       .bind(input.email, new Date(Date.now() - cfg.cardValidityDays * 86_400_000).toISOString(), now)
       .first<{ id: number; credits_left: number }>();
-    if (!card) throw new HttpError(402, "Aucune carte valide avec des cours restants n'est associée à cette adresse email (une carte 3 cours est valable 2 mois, une carte cadeau 1 an).");
+    if (!card) throw new HttpError(402, "Aucune carte valide avec des cours restants n'est associée à cette adresse email (une carte 3 cours est valable 2 mois, une carte cadeau 2 mois).");
     cardId = card.id;
     creditsLeft = card.credits_left;
   }

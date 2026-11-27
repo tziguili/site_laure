@@ -231,7 +231,7 @@ export async function postGift(req: Request, env: Env): Promise<Response> {
     env,
     {
       name: formula === "single" ? "Carte cadeau — 1 cours de yoga" : `Carte cadeau — ${credits} cours de yoga`,
-      description: `Pour ${toName}, valable 1 an · Laure Yoga Club`,
+      description: `Pour ${toName}, valable 2 mois · Laure Yoga Club`,
       amountCents: amount,
       email: fromEmail,
       metadata: { kind: "card", card_id: String(card.id), gift: "1" },
